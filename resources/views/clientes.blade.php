@@ -54,9 +54,12 @@
                                     <small>{{$cli->apellidoPaterno.' '.$cli->apellidoMaterno}}</small>
                                 </div>
                                 <div class="col-1 text-truncate">
+                                    
                                     <small>{{$cli->TipoDocumento->descripcion}}</small>
                                 </div>
+
                                 <div class="col-2">
+                                   <!--  <input type="number" name="documento" id="documento">-->
                                     <small>{{$cli->numeroDocumento}}</small>
                                 </div>
                                 <div class="col-2">
@@ -71,9 +74,14 @@
                 </ul>
             </div>
         @endif
+        
     </div>
-    {{$clientes->total()}}
-</div>
+    <div class="d-flex justify-content-start mb-5">
+        <span class="me-3">{{$clientes->total()}}</span>
+        {{$clientes->links('pagination::bootstrap-5')}}
+    </div>
+    
+
 <x-modal_new_cliente :documentos="$tipoDocumentos"/>
 <script>
 document.getElementById('btn-modal-new-cliente').addEventListener('click',function(x){

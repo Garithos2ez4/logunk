@@ -1,8 +1,26 @@
+
 const validateIconSku = document.getElementById('sku-modal-egreso-validate');
 const hiddenBody = document.getElementById('hidden-body');
 const itemEgresoDiv = document.getElementById('div-items-create-egreso');
 const btnSubmitCreateEgreso = document.getElementById('btn-create-egreso-submit');
 var path = window.assetUrl;
+
+const cartManager = {
+    productosAgregados: 0,
+    agregarProducto: function() {
+        this.productosAgregados++;
+        document.getElementById('contador-productos').textContent = `Productos Agregados: ${this.productosAgregados}`;
+    },
+    eliminarProducto: function() {
+        if (this.productosAgregados > 0) {
+            this.productosAgregados--;
+            document.getElementById('contador-productos').textContent = `Productos Agregados: ${this.productosAgregados}`;
+        }
+    }
+};
+
+// Asegúrate de usar el objeto cartManager globalmente
+window.cartManager = cartManager;
 
 function searchPublicacion(inputElement) {
     let query = inputElement.value;
@@ -16,6 +34,7 @@ function searchPublicacion(inputElement) {
     }
 
     // Agregar el manejador de clics al documento
+    document.removeEventListener('click', handleClickOutside);
     document.addEventListener('click', handleClickOutside);
 
     if (query.length > 2) { // Comenzar la búsqueda después de 3 caracteres
@@ -191,50 +210,62 @@ function searchRegistro(inputElement) {
     }
 }
 
-function createItem(object,query){
+function createItem(object, query){
     if (object == null || Object.keys(object).length == 0) {
-        alertBootstrap('Producto '+query+' no encontrado','warning');
+        alertBootstrap('Producto ' + query + ' no encontrado', 'warning');
         return;
     }
 
-    if(validateSerialById(object.idRegistroProducto)){
+    if (validateSerialById(object.idRegistroProducto)) {
         alertBootstrap('Producto ' + object.numeroSerie + ' ya agregado', 'warning');
         return;
     }
-    itemEgresoDiv;
-    let divRowItem = createDiv(['row','pt-2','pb-2','border'],null);
-    let inputHidden = createInput(['body-form','hidden-form'],null,'hidden',object.idRegistroProducto,'idregistros[]');
-    let divColImg = createDiv(['col-1'],null);
-    let divColContent = createDiv(['col-11'],null);
-    let divRowContent = createDiv(['row'],null);
+
+    let divRowItem = createDiv(['row','pt-2','pb-2','border'], null);
+    let inputHidden = createInput(['body-form','hidden-form'], null, 'hidden', object.idRegistroProducto, 'idregistros[]');
+    let divColImg = createDiv(['col-1'], null);
+    let divColContent = createDiv(['col-11'], null);
+    let divRowContent = createDiv(['row'], null);
 
     let imgItem = document.createElement('img');
-    imgItem.classList.add('w-100','border');
+    imgItem.classList.add('w-100', 'border');
     imgItem.style.width = '100%';
     imgItem.src = path + '/' + object.image;
     divColImg.appendChild(imgItem);
 
-    let divColTitle = createDiv(['col-10','pt-2'],null);
-    let h4Title = createH5(null,null,object.nombreProducto);
+    let divColTitle = createDiv(['col-10', 'pt-2'], null);
+    let h4Title = createH5(null, null, object.nombreProducto);
     divColTitle.appendChild(h4Title);
 
-    let divColBtnDelete = createDiv(['col-2','text-end'],null);
-    let btnDeleteItem = createLink(['text-danger','fs-4'],null,'<i class="bi bi-x-lg"></i>','javascript:void(0)',[() => divRowItem.remove(),() => validateSubmit()  ]);
+    let divColBtnDelete = createDiv(['col-2', 'text-end'], null);
+    let btnDeleteItem = createLink(
+        ['text-danger', 'fs-4'],
+        null,
+        '<i class="bi bi-x-lg"></i>',
+        'javascript:void(0)',
+        [
+            () => {
+                // Aquí se elimina el producto y se actualiza el contador
+                divRowItem.remove(); // Elimina el producto del DOM
+                cartManager.eliminarProducto(); // Resta del contador
+                validateSubmit(); // Validamos el estado del formulario
+            }
+        ]
+    );
     divColBtnDelete.appendChild(btnDeleteItem);
 
-    let divColModelo = createDiv(['col-4'],null);
-    divColModelo.innerHTML = 'Modelo: '+ object.modelo;
+    let divColModelo = createDiv(['col-4'], null);
+    divColModelo.innerHTML = 'Modelo: ' + object.modelo;
 
-    let divColCodigo = createDiv(['col-3'],null);
+    let divColCodigo = createDiv(['col-3'], null);
     divColCodigo.innerHTML = 'Codigo: ' + object.codigoProducto;
 
-    let divColSerial = createDiv(['col-3'],null);
+    let divColSerial = createDiv(['col-3'], null);
     divColSerial.innerHTML = 'SN: ' + object.numeroSerie;
 
-    let divColEstado = createDiv(['col-2','text-end'],null);
-    divColEstado.innerHTML = object.estado;
+    let divColEstado = createDiv(['col-2', 'text-end'], null);
 
-    console.log(object);
+    divColEstado.innerHTML = object.estado;
     divRowContent.appendChild(divColTitle);
     divRowContent.appendChild(divColBtnDelete);
     divRowContent.appendChild(divColModelo);
@@ -246,6 +277,10 @@ function createItem(object,query){
     divRowItem.appendChild(inputHidden);
     divRowItem.appendChild(divColContent);
     itemEgresoDiv.appendChild(divRowItem);
+
+    // Incrementamos el contador de productos
+
+    cartManager.agregarProducto();
 }
 
 function validateSerialById(id) {

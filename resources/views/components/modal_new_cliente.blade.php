@@ -32,15 +32,15 @@
                         </div>
                         <div class="col-6">
                             <label class="form-label client-document">DNI:</label>
-                            <input type="text" name="numerodoc" placeholder="88888888" maxlength="11" class="form-control" required>
+                            <input type="text" name="numerodoc" placeholder="88888888" maxlength="11" class="form-control" required pattern="\d+" title="solo numeros permitidos" oninput="validateNumericInput(this)" >
                         </div>
                         <div class="col-6">
                             <label class="form-label">Telefono:</label>
-                            <input type="tel" name="numerotelf" placeholder="+51 999 999 999" maxlength="15" class="form-control">
+                            <input type="tel" name="numerotelf" placeholder="+51 999 999 999" maxlength="20" class="form-control" oninput="validateNumericInput(this)">
                         </div>
                         <div class="col-6">
                             <label class="form-label">Correo Electronico:</label>
-                            <input type="email" name="correo" placeholder="tumail@youmail.com" maxlength="50" class="form-control">
+                            <input type="email" name="correo" placeholder="tumail@mail.com" maxlength="50" class="form-control">
                         </div>
                     </div>
                 </div>
