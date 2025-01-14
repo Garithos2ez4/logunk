@@ -76,8 +76,8 @@
         @endif
         
     </div>
-    <div class="d-flex justify-content-start mb-5">
-        <span class="me-3">{{$clientes->total()}}</span>
+    <div class="d-flex justify-content-end mb-5">
+        <span class="me-3 mb-3">{{$clientes->total()}}</span>
         {{$clientes->links('pagination::bootstrap-5')}}
     </div>
     

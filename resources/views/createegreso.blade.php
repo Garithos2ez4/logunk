@@ -28,6 +28,7 @@
                     <ul class="list-group" id="suggestions-serial-number" name="idregistro"
                         style="position:absolute;z-index:1000;top:100%;left:0;width:100%"></ul>
                 </div>
+                
                 <div class="col-12 text-end">
                     <small class="text-secondary">scanner</small>
                 </div>
@@ -36,12 +37,17 @@
         </div>
     </div>
     <br>
+    <div class="row">
+        <div class="col-12 text-start">
+            <div id="contador-productos" class="font-weight-bold"style="font-size:18px; color: #007bff;">Productos Agregados: 0</div>
+        </div>
+    </div>
     <form action="{{ route('insertegreso') }}" method="POST">
         @csrf
     <div class="row">
         <div class="col-4 mb-2">
             <div class="row">
-                <div class="col-6">
+                <div class="col-6">                    
                     <label>SKU</label> <i id="sku-modal-egreso-validate" class="bi bi-exclamation-circle text-danger"></i>
                 </div>
                 <div class="col-6 text-end text-secondary">
@@ -87,6 +93,7 @@
     <div class="row">
         <div class="col-12 text-center">
             <button class="btn btn-success" type="submit" id="btn-create-egreso-submit"><i class="bi bi-floppy"></i> Registrar</button>
+           
         </div>
     </div>
     </form>

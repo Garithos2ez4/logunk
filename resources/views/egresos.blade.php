@@ -48,6 +48,8 @@
         <div id="container-lista-egresos">
             <x-lista_egresos :egresos="$egresos" :container="'container-lista-egresos'" />
         </div>
+
+        
         <!-- Modal -->
         <form action="{{route('devolucionegreso')}}" method="post" id="form-detail-egreso">
             @csrf

@@ -1,6 +1,23 @@
 let hiddenBody = document.getElementById('hidden-body');
 let suggestionUl = document.getElementById('suggestions');
 
+const contadorProductos = {
+    productosAgregados: 0,
+    actualizarContador: function() {
+        document.getElementById('contador-productos').textContent = `Productos Agregados: ${this.productosAgregados}`;
+    },
+    agregarProducto: function() {
+        this.productosAgregados++;
+        this.actualizarContador();
+    },
+    eliminarProducto: function() {
+        if (this.productosAgregados > 0) {
+            this.productosAgregados--;
+            this.actualizarContador();
+        }
+    }
+};
+
 document.getElementById('search').addEventListener('input', function () {
     let inputQuery = this;
     let query = inputQuery.value;
@@ -19,25 +36,29 @@ document.getElementById('search').addEventListener('input', function () {
                     let liItem = createLi(['list-group-item','hover-sistema-uno'], null);
                     liItem.style.cursor = 'pointer';
 
-                    let rowItem = createDiv(['row'],null);
+                    let rowItem = createDiv(['row'], null);
 
-                    let colSerie = createDiv(['col-12'],null);
+                    let colSerie = createDiv(['col-12'], null);
                     colSerie.textContent = item.numeroSerie;
 
-                    let colProducto = createDiv(['col-12','text-secondary'],null);
-                    colProducto.innerHTML = '<small>'+item.Producto.codigoProducto+'</small>';
+                    let colProducto = createDiv(['col-12','text-secondary'], null);
+                    colProducto.innerHTML = '<small>' + item.Producto.codigoProducto + '</small>';
 
                     rowItem.appendChild(colSerie);
                     rowItem.appendChild(colProducto);
                     liItem.appendChild(rowItem);
 
-                    liItem.addEventListener('click',function(){
-                        addProductoSerial(item,query);
+                    liItem.addEventListener('click', function(){
+                        addProductoSerial(item, query);
                         suggestionUl.innerHTML = '';
                         hiddenBody.style.display = 'none';
                         inputQuery.value = item.numeroSerie;
+
+                        // Incrementa el contador de productos cuando se agrega un producto
+                        // Incrementamos el contador
                     });
 
+                    console.log("Agregando elemento", liItem);
                     suggestionUl.appendChild(liItem); 
                 });
             }
@@ -50,6 +71,7 @@ document.getElementById('search').addEventListener('input', function () {
     }
 
 });
+
 
 function scanOperations(){
     searchCodeToController(getSerial());
@@ -69,45 +91,56 @@ function searchCodeToController(query) {
     return data;
 }
 
-
-function addProductoSerial(object,query) {
+function addProductoSerial(object, query) {
     console.log(object);
     if (object == null || Object.keys(object).length == 0) {
-        alertBootstrap('Producto '+query+' no encontrado','warning');
+        alertBootstrap('Producto ' + query + ' no encontrado', 'warning');
         return;
     }
+
+    // Verifica si el producto ya está agregado
     if (validateDuplicity(object.Registro.numeroSerie)) {
         alertBootstrap('Producto ' + object.Registro.numeroSerie + ' ya agregado', 'warning');
         return;
     }
+
+    // Incrementa el contador solo si el producto no ha sido agregado previamente
+    contadorProductos.agregarProducto();  // Incrementamos el contador
+
     let ulTraslado = document.getElementById('lista-traslado');
 
-    let itemTraslado = createLi(['list-group-item', 'item-traslado'],null);
+    // Crear el nuevo <li> para el producto
+    let itemTraslado = createLi(['list-group-item', 'item-traslado'], null);
     itemTraslado.setAttribute('data-serie', object.Registro.numeroSerie);
 
-    let divRow = createDiv(['row', 'text-center'],null);
+    let divRow = createDiv(['row', 'text-center'], null);
 
-    let divColProducto = createDiv(['col-10','col-md-4', 'text-start'],null);
+    let divColProducto = createDiv(['col-10', 'col-md-4', 'text-start'], null);
     divColProducto.innerHTML = "<strong>" + object.Producto.modelo + "</strong><br class='d-none d-md-inline'><small class='text-secondary d-none d-md-inline'>" + object.Producto.codigoProducto + "</small>";
 
-    let divColLinkDelete = createDiv(['col-2','d-md-none', 'text-end'],null);
-    let linkDelete = createLink(['text-danger'],null,'<i class="bi bi-x-lg"></i>','javascript:void(0)',[() => itemTraslado.remove(),() => validateProductos()]);
+    let divColLinkDelete = createDiv(['col-2', 'd-md-none', 'text-end'], null);
+    let linkDelete = createLink(['text-danger'], null, '<i class="bi bi-x-lg"></i>', 'javascript:void(0)', [() => {
+        itemTraslado.remove();
+        // Restar del contador de productos cuando se elimina un producto
+        contadorProductos.eliminarProducto();
+        validateProductos();
+    }]);
     divColLinkDelete.appendChild(linkDelete);
 
-    let divColSerie = createDiv(['col-md-2','text-start','text-md-center'],null);
+    let divColSerie = createDiv(['col-md-2', 'text-start', 'text-md-center'], null);
     divColSerie.innerHTML = '<small>' + object.Registro.numeroSerie + '</small><br class="d-none d-md-inline"><small class="text-secondary d-none d-md-inline">' + object.Proveedor.nombreProveedor + '</small>';
 
-    let divColEstado = createDiv(['col-md-1','d-none','d-md-block'],null);
+    let divColEstado = createDiv(['col-md-1', 'd-none', 'd-md-block'], null);
     divColEstado.innerHTML = '<small>' + object.Registro.estado + '</small>';
 
-    let divColOrigen = createDiv(['col-6','col-md-2'],null);
-    divColOrigen.innerHTML = '<small class="form-label d-md-none">Origen</small>'+"<select class='form-select form-select-sm' disabled>" +
-        "<option selected>" + object.Almacen.descripcion + "</option>"
-        + "</select>";
+    let divColOrigen = createDiv(['col-6', 'col-md-2'], null);
+    divColOrigen.innerHTML = '<small class="form-label d-md-none">Origen</small>' + "<select class='form-select form-select-sm' disabled>" +
+        "<option selected>" + object.Almacen.descripcion + "</option>" +
+        "</select>";
 
-    let divColDestino = createDiv(['col-6','col-md-2'],null);
+    let divColDestino = createDiv(['col-6', 'col-md-2'], null);
     let selectDestino = document.createElement('select');
-    selectDestino.name = 'traslado[' + object.idRegistro + ']'
+    selectDestino.name = 'traslado[' + object.idRegistro + ']';
     selectDestino.classList.add('form-select', 'form-select-sm');
     let defaultOption = document.createElement('option');
     defaultOption.value = '';
@@ -124,10 +157,16 @@ function addProductoSerial(object,query) {
     divColDestino.innerHTML = '<small class="form-label d-md-none">Destino</small>';
     divColDestino.appendChild(selectDestino);
 
-    let divColBtnDelete = createDiv(['col-md-1','text-start','text-md-center','d-none','d-md-block'],null);
-    let btnDelete = createButton(['btn', 'btn-danger', 'btn-sm'],null,'<i class="bi bi-trash-fill"></i>','button',[() => itemTraslado.remove(),() => validateProductos()]);
+    let divColBtnDelete = createDiv(['col-md-1', 'text-start', 'text-md-center', 'd-none', 'd-md-block'], null);
+    let btnDelete = createButton(['btn', 'btn-danger', 'btn-sm'], null, '<i class="bi bi-trash-fill"></i>', 'button', [() => {
+        itemTraslado.remove();
+        // Restar del contador de productos cuando se elimina un producto
+        contadorProductos.eliminarProducto();
+        validateProductos();
+    }]);
     divColBtnDelete.appendChild(btnDelete);
 
+    // Añadimos las columnas a la fila
     divRow.appendChild(divColProducto);
     divRow.appendChild(divColLinkDelete);
     divRow.appendChild(divColSerie);
@@ -137,6 +176,7 @@ function addProductoSerial(object,query) {
     divRow.appendChild(divColBtnDelete);
     itemTraslado.appendChild(divRow);
     ulTraslado.appendChild(itemTraslado);
+
     validateProductos();
 }
 

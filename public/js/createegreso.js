@@ -1,4 +1,3 @@
-
 const validateIconSku = document.getElementById('sku-modal-egreso-validate');
 const hiddenBody = document.getElementById('hidden-body');
 const itemEgresoDiv = document.getElementById('div-items-create-egreso');
@@ -276,7 +275,7 @@ function createItem(object, query){
     divRowItem.appendChild(divColImg);
     divRowItem.appendChild(inputHidden);
     divRowItem.appendChild(divColContent);
-    itemEgresoDiv.appendChild(divRowItem);
+    itemEgresoDiv.insertBefore(divRowItem, itemEgresoDiv.firstChild);
 
     // Incrementamos el contador de productos
 
@@ -290,7 +289,6 @@ function validateSerialById(id) {
         return x.value == id;
     });
 }
-
 
 function validateSubmit() {
     let validate = true;

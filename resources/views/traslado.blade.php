@@ -29,10 +29,15 @@
     </div>
     <br>
     <div class="row">
+        <div class="col-12 text-start">
+            <div id="contador-productos" class="font-weight-bold" style="font-size:18px; color: #007bff;">Productos Agregados: 0</div>
+        </div>
+    </div>
+    <div class="row">
         <form action="{{route('updateregistroalmacen')}}" method="post">
             @csrf
             <div class="col-12">
-                <ul class="list-group" id="lista-traslado" style="visibility: hidden;overflow:auto">
+                <ul class="list-group" id="lista-traslado" style="visibility: hidden; overflow: auto; po">
                     <li class="list-group-item bg-sistema-uno text-light">
                         <div class="row pt-1 text-center">
                             <div class="col-md-4">
@@ -52,14 +57,16 @@
                             </div>
                         </div>
                     </li>
+                    <!-- Aquí se agregarán los productos dinámicamente -->
                 </ul>
             </div>
             <br>
             <div class="col-md-12 text-center" id="btn-reubicar" style="display: none">
-                <button type="submit" class="btn btn-success"><i class="bi bi-arrow-left-right" ></i> Reubicar</button>
+                <button type="submit" class="btn btn-success"><i class="bi bi-arrow-left-right"></i> Reubicar</button>
             </div>
         </form>
     </div>
+
     <div class="row" id="aviso-vacio">
         <div class="col-12 d-flex justify-content-center align-items-center text-secondary text-decoration-underline" style="height:60vh">
             <h4>Añade una serie para su traslado</h4>
@@ -69,5 +76,5 @@
 <script>
     var almacenes = @json($almacenes);
 </script>
-<script src="{{asset('js/traslado.js')}}"></script>
+<script src="{{ asset('js/traslado.js') }}"></script>
 @endsection
