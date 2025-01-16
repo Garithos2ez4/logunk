@@ -5,17 +5,24 @@ const contadorProductos = {
     productosAgregados: 0,
     actualizarContador: function() {
         document.getElementById('contador-productos').textContent = `Productos Agregados: ${this.productosAgregados}`;
+        console.log(`Contador actualizado: ${this.productosAgregados}`);  // Log del contador actualizado
+
     },
     agregarProducto: function() {
         this.productosAgregados++;
         this.actualizarContador();
+        console.log('Producto agregado. Total de productos:', this.productosAgregados);  // Log al agregar un producto
+
     },
     eliminarProducto: function() {
         if (this.productosAgregados > 0) {
             this.productosAgregados--;
             this.actualizarContador();
+            console.log('Producto eliminado. Total de productos:', this.productosAgregados);  // Log al eliminar un producto
+
         }
     }
+    
 };
 
 document.getElementById('search').addEventListener('input', function () {
@@ -53,7 +60,6 @@ document.getElementById('search').addEventListener('input', function () {
                         suggestionUl.innerHTML = '';
                         hiddenBody.style.display = 'none';
                         inputQuery.value = item.numeroSerie;
-
                         // Incrementa el contador de productos cuando se agrega un producto
                         // Incrementamos el contador
                     });
@@ -144,6 +150,8 @@ function addProductoSerial(object, query) {
     selectDestino.classList.add('form-select', 'form-select-sm');
     let defaultOption = document.createElement('option');
     defaultOption.value = '';
+
+
     defaultOption.textContent = '-elige un destino-';
     selectDestino.appendChild(defaultOption);
     almacenes.forEach(almacen => {

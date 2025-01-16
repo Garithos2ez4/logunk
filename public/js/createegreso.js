@@ -1,3 +1,4 @@
+
 const validateIconSku = document.getElementById('sku-modal-egreso-validate');
 const hiddenBody = document.getElementById('hidden-body');
 const itemEgresoDiv = document.getElementById('div-items-create-egreso');
@@ -129,6 +130,8 @@ function checkSku() {
     }
 }
 
+let productosAgregados = [];
+
 function searchRegistro(inputElement) {
     let query = inputElement.value;
 
@@ -157,6 +160,11 @@ function searchRegistro(inputElement) {
 
 
                 data.forEach(item => {
+                    
+                    if (productosAgregados.includes(item.idRegistroProducto)){
+                        return;
+                    }
+                    
                     let li = document.createElement('li');
                     li.classList.add('list-group-item', 'pe-0');
                     li.classList.add('hover-sistema-uno', 'text-truncate');
@@ -220,6 +228,8 @@ function createItem(object, query){
         return;
     }
 
+    productosAgregados.push(object.idRegistroProducto);
+
     let divRowItem = createDiv(['row','pt-2','pb-2','border'], null);
     let inputHidden = createInput(['body-form','hidden-form'], null, 'hidden', object.idRegistroProducto, 'idregistros[]');
     let divColImg = createDiv(['col-1'], null);
@@ -248,6 +258,9 @@ function createItem(object, query){
                 divRowItem.remove(); // Elimina el producto del DOM
                 cartManager.eliminarProducto(); // Resta del contador
                 validateSubmit(); // Validamos el estado del formulario
+
+                productosAgregados = productosAgregados.filter(id => id !== object.idRegistroProducto);
+
             }
         ]
     );
@@ -269,7 +282,7 @@ function createItem(object, query){
     divRowContent.appendChild(divColBtnDelete);
     divRowContent.appendChild(divColModelo);
     divRowContent.appendChild(divColCodigo);
-    divRowContent.appendChild(divColSerial);
+    divRowContent.appendChild(divColSerial); 
     divRowContent.appendChild(divColEstado);
     divColContent.appendChild(divRowContent);
     divRowItem.appendChild(divColImg);
@@ -277,7 +290,6 @@ function createItem(object, query){
     divRowItem.appendChild(divColContent);
     itemEgresoDiv.insertBefore(divRowItem, itemEgresoDiv.firstChild);
 
-    // Incrementamos el contador de productos
 
     cartManager.agregarProducto();
 }
@@ -289,6 +301,7 @@ function validateSerialById(id) {
         return x.value == id;
     });
 }
+
 
 function validateSubmit() {
     let validate = true;
