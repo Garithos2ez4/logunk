@@ -187,7 +187,71 @@ function addProductoSerial(object, query) {
 
     validateProductos();
 }
+// Se ejecuta cuando cambia la selección de un destino
+function habilitarBotonReubicar() {
+    const btnReubicar = document.getElementById('btn-reubicar-submit');
+    const selectsDestino = document.querySelectorAll('.item-traslado select[name^="traslado"]');
+    
+    let habilitado = true;
+    
+    // Verifica si algún select tiene la opción 0 seleccionada
+    selectsDestino.forEach(select => {
+        if (select.value == '') {
+            habilitado = false;  // Deshabilita el botón si algún destino es 0
+        }
+    });
 
+    // Habilita o deshabilita el botón de reubicar según las condiciones
+    btnReubicar.disabled = !habilitado;
+}
+
+document.addEventListener('change', function (event) {
+    if (event.target.matches('.item-traslado select[name^="traslado"]')) {
+        habilitarBotonReubicar();
+    }
+});
+
+// Función para mostrar el modal de confirmación
+function mostrarModalConfirmacion(event) {
+    event.preventDefault();  // Previene el envío inmediato del formulario
+    const modal = document.getElementById('modalConfirmacion');
+    const fondo = document.getElementById('hidden-body');
+    modal.style.display = "block";  // Muestra el modal
+    fondo.style.display = "block";  // Muestra el fondo semitransparente
+}
+
+// Función de confirmación antes de enviar el formulario
+function confirmarReubicacion(event) {
+    event.preventDefault();  // Prevenir el comportamiento por defecto
+    console.log("Acción confirmada"); // Para depuración
+    document.querySelector('form').submit();  // Envía el formulario
+}
+
+document.getElementById('btn-reubicar').addEventListener('click', mostrarModalConfirmacion);
+
+document.addEventListener('DOMContentLoaded', function () {
+    const btnReubicar = document.getElementById('btn-reubicar');
+    if (btnReubicar) {
+        btnReubicar.addEventListener('click', mostrarModalConfirmacion);
+    }
+
+    const btnConfirmar = document.getElementById('btn-confirmar');
+    if (btnConfirmar) {
+        btnConfirmar.addEventListener('click', confirmarReubicacion);
+    }
+
+    const btnCancelar = document.getElementById('btn-cancelar');
+    if (btnCancelar) {
+        btnCancelar.addEventListener('click', function () {
+            const modal = document.getElementById('modalConfirmacion');
+            const fondo = document.getElementById('hidden-body');
+            modal.style.display = "none";  // Cierra el modal
+            fondo.style.display = "none";  // Oculta el fondo
+        });
+    }
+});
+
+// Función para manejar la visibilidad de los productos
 function validateProductos() {
     let itemsProductos = document.querySelectorAll('.item-traslado');
     let ulTraslado = document.getElementById('lista-traslado');
@@ -199,6 +263,7 @@ function validateProductos() {
         ulTraslado.style.height = '70vh';
         avisoVacio.style.display = 'none';
         btnReubicar.style.display = 'block';
+        habilitarBotonReubicar(); 
     } else {
         ulTraslado.style.visibility = 'hidden';
         ulTraslado.style.height = '0';
@@ -227,4 +292,5 @@ function hideSuggestions(event) {
         hiddenBody.style.display = 'none';
     }
 }
+
 document.addEventListener('click', hideSuggestions);
