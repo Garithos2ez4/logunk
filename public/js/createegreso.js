@@ -19,6 +19,53 @@ const cartManager = {
     }
 };
 
+document.addEventListener('DOMContentLoaded', function() {
+    var fechaActual = new Date().toISOString().split('T')[0]; 
+
+    document.querySelector('[name="fechapedido"]').setAttribute('max', fechaActual);
+
+    document.querySelector('form').addEventListener('submit', function(event) {
+        // Obtener el valor de la fecha de pedido
+        var fechaPedido = document.querySelector('[name="fechapedido"]').value;
+        
+        // Verificar si la fecha de pedido es posterior a la fecha actual
+        if (fechaPedido && fechaPedido > fechaActual) {
+            event.preventDefault(); // Evitar que el formulario se envíe
+
+            // Mostrar mensaje de error
+            alertBootstrap('La fecha de pedido no puede ser posterior a la fecha actual.', 'danger');
+        
+        }
+    });
+
+    document.querySelectorAll('input').forEach(function(x) {
+        x.addEventListener('input', validateSubmit);
+    });
+    validateSubmit();
+});
+
+
+
+
+// Función para mostrar el mensaje de error (puedes personalizarla)
+function alertBootstrap(message, type) {
+    var alertDiv = document.createElement('div');
+    alertDiv.classList.add('alert', 'alert-' + type, 'alert-dismissible', 'fade', 'show');
+    alertDiv.setAttribute('role', 'alert');
+    alertDiv.innerHTML = message + '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>';
+
+    // Añadir el mensaje al DOM
+    document.body.appendChild(alertDiv);
+
+    // Eliminar el mensaje después de 5 segundos
+    setTimeout(function() {
+        alertDiv.remove();
+    }, 5000);
+}
+
+
+
+
 // Asegúrate de usar el objeto cartManager globalmente
 window.cartManager = cartManager;
 
