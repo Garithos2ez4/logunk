@@ -21,52 +21,57 @@ const cartManager = {
 
 document.addEventListener('DOMContentLoaded', function() {
     var fechaActual = new Date().toISOString().split('T')[0]; 
-
     document.querySelector('[name="fechapedido"]').setAttribute('max', fechaActual);
 
+    document.querySelector('[name="fechapedido"]').addEventListener('blur', validateFechas);
+    document.querySelector('[name="fechadespacho"]').addEventListener('blur', validateFechas);
+
     document.querySelector('form').addEventListener('submit', function(event) {
-        // Obtener el valor de la fecha de pedido
         var fechaPedido = document.querySelector('[name="fechapedido"]').value;
-        
-        // Verificar si la fecha de pedido es posterior a la fecha actual
+        var fechaDespacho = document.querySelector('[name="fechadespacho"]').value;
+
         if (fechaPedido && fechaPedido > fechaActual) {
-            event.preventDefault(); // Evitar que el formulario se envíe
-
-            // Mostrar mensaje de error
-            alertBootstrap('La fecha de pedido no puede ser posterior a la fecha actual.', 'danger');
+            event.preventDefault();
+            alertBootstrap('La fecha de pedido no puede ser posterior a la fecha actual.', 'danger');        }
         
-        }
+        if (fechaDespacho && fechaPedido && fechaDespacho < fechaPedido) {
+            event.preventDefault();
+            alertBootstrap('La fecha de despacho debe ser igual o posterior a la fecha de pedido.', 'danger');        }
     });
 
-    document.querySelectorAll('input').forEach(function(x) {
-        x.addEventListener('input', validateSubmit);
-    });
     validateSubmit();
 });
 
+function validateFechas() {
+    var fechaPedido = document.querySelector('[name="fechapedido"]').value;
+    var fechaDespacho = document.querySelector('[name="fechadespacho"]');
 
+    if (fechaPedido) {
+        fechaDespacho.setAttribute('min', fechaPedido); 
+    } else {
+        fechaDespacho.removeAttribute('min'); 
+    }
 
+    if (fechaDespacho.value && fechaPedido && fechaDespacho.value < fechaPedido) {
+        alertBootstrap('La fecha de despacho debe ser igual o posterior a la fecha de pedido.', 'danger');
+    }
+}
 
-// Función para mostrar el mensaje de error (puedes personalizarla)
-function alertBootstrap(message, type) {
+function alertBootstrap(usuario, message, type) {
     var alertDiv = document.createElement('div');
     alertDiv.classList.add('alert', 'alert-' + type, 'alert-dismissible', 'fade', 'show');
     alertDiv.setAttribute('role', 'alert');
-    alertDiv.innerHTML = message + '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>';
+    
+    // Personalizando el mensaje de alerta para incluir el nombre del usuario
+    alertDiv.innerHTML = `Usuario: ${usuario} - ${message} <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>`;
 
-    // Añadir el mensaje al DOM
     document.body.appendChild(alertDiv);
 
-    // Eliminar el mensaje después de 5 segundos
     setTimeout(function() {
         alertDiv.remove();
-    }, 5000);
+    }, 8000);
 }
 
-
-
-
-// Asegúrate de usar el objeto cartManager globalmente
 window.cartManager = cartManager;
 
 function searchPublicacion(inputElement) {
@@ -80,7 +85,6 @@ function searchPublicacion(inputElement) {
         }
     }
 
-    // Agregar el manejador de clics al documento
     document.removeEventListener('click', handleClickOutside);
     document.addEventListener('click', handleClickOutside);
 
