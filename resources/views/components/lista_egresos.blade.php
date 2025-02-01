@@ -97,6 +97,10 @@
                 @endforeach
             </ul>
         </div>
+        <div class="d-flex justify-content-end mb-5">
+            <span class="me-3 mb-3">{{$egresos->total()}}</span>
+            {{$egresos->links('pagination::bootstrap-5')}}
+        </div>
         
     </div>
 @else
