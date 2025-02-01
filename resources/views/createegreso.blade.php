@@ -76,11 +76,11 @@
         </div>
         <div class="col-2 mb-2">
             <label>Fecha de pedido</label>
-            <input type="date" name="fechapedido" class="form-control input-egreso cab-form" required>
+            <input type="date" name="fechapedido"  id="fechapedido" class="form-control input-egreso cab-form" required>
         </div>
         <div class="col-2 mb-2">
             <label>Fecha de despacho</label>
-            <input type="date" name="fechadespacho" class="form-control input-egreso cab-form" required>
+            <input type="date" name="fechadespacho" id="fechadespacho"class="form-control input-egreso cab-form" required>
         </div>
     </div>
     <br>
