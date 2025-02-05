@@ -111,7 +111,7 @@ button {
             </div>
             <br>
             
-            <div class="col-md-12 text-center" id="btn-reubicar" style="display: none">
+            <div class="col-md-12 text-center" id="btn-reubicar-container" style="display: none">
                 <button type="submit" class="btn btn-success" id="btn-reubicar-submit" disabled><i class="bi bi-arrow-left-right"></i> Reubicar</button>
             </div>
         </form>
