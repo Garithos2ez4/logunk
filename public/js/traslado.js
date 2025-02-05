@@ -5,20 +5,19 @@ const contadorProductos = {
     productosAgregados: 0,
     actualizarContador: function() {
         document.getElementById('contador-productos').textContent = `Productos Agregados: ${this.productosAgregados}`;
-        console.log(`Contador actualizado: ${this.productosAgregados}`);  // Log del contador actualizado
-
+        console.log(`Contador actualizado: ${this.productosAgregados}`);  
     },
     agregarProducto: function() {
         this.productosAgregados++;
         this.actualizarContador();
-        console.log('Producto agregado. Total de productos:', this.productosAgregados);  // Log al agregar un producto
+        console.log('Producto agregado. Total de productos:', this.productosAgregados);  
 
     },
     eliminarProducto: function() {
         if (this.productosAgregados > 0) {
             this.productosAgregados--;
             this.actualizarContador();
-            console.log('Producto eliminado. Total de productos:', this.productosAgregados);  // Log al eliminar un producto
+            console.log('Producto eliminado. Total de productos:', this.productosAgregados);  
 
         }
     }
@@ -60,8 +59,7 @@ document.getElementById('search').addEventListener('input', function () {
                         suggestionUl.innerHTML = '';
                         hiddenBody.style.display = 'none';
                         inputQuery.value = item.numeroSerie;
-                        // Incrementa el contador de productos cuando se agrega un producto
-                        // Incrementamos el contador
+                        
                     });
 
                     console.log("Agregando elemento", liItem);
@@ -104,18 +102,18 @@ function addProductoSerial(object, query) {
         return;
     }
 
-    // Verifica si el producto ya está agregado
+
     if (validateDuplicity(object.Registro.numeroSerie)) {
         alertBootstrap('Producto ' + object.Registro.numeroSerie + ' ya agregado', 'warning');
         return;
     }
 
-    // Incrementa el contador solo si el producto no ha sido agregado previamente
-    contadorProductos.agregarProducto();  // Incrementamos el contador
+
+    contadorProductos.agregarProducto(); 
 
     let ulTraslado = document.getElementById('lista-traslado');
 
-    // Crear el nuevo <li> para el producto
+
     let itemTraslado = createLi(['list-group-item', 'item-traslado'], null);
     itemTraslado.setAttribute('data-serie', object.Registro.numeroSerie);
 
@@ -127,7 +125,7 @@ function addProductoSerial(object, query) {
     let divColLinkDelete = createDiv(['col-2', 'd-md-none', 'text-end'], null);
     let linkDelete = createLink(['text-danger'], null, '<i class="bi bi-x-lg"></i>', 'javascript:void(0)', [() => {
         itemTraslado.remove();
-        // Restar del contador de productos cuando se elimina un producto
+       
         contadorProductos.eliminarProducto();
         validateProductos();
     }]);
@@ -168,13 +166,11 @@ function addProductoSerial(object, query) {
     let divColBtnDelete = createDiv(['col-md-1', 'text-start', 'text-md-center', 'd-none', 'd-md-block'], null);
     let btnDelete = createButton(['btn', 'btn-danger', 'btn-sm'], null, '<i class="bi bi-trash-fill"></i>', 'button', [() => {
         itemTraslado.remove();
-        // Restar del contador de productos cuando se elimina un producto
         contadorProductos.eliminarProducto();
         validateProductos();
     }]);
     divColBtnDelete.appendChild(btnDelete);
 
-    // Añadimos las columnas a la fila
     divRow.appendChild(divColProducto);
     divRow.appendChild(divColLinkDelete);
     divRow.appendChild(divColSerie);
@@ -183,11 +179,9 @@ function addProductoSerial(object, query) {
     divRow.appendChild(divColDestino);
     divRow.appendChild(divColBtnDelete);
     itemTraslado.appendChild(divRow);
-    ulTraslado.appendChild(itemTraslado);
-
+    ulTraslado.insertBefore(itemTraslado, ulTraslado.firstElementChild.nextSibling); 
     validateProductos();
 }
-// Se ejecuta cuando cambia la selección de un destino
 function habilitarBotonReubicar() {
     const btnReubicar = document.getElementById('btn-reubicar-submit');
     const selectsDestino = document.querySelectorAll('.item-traslado select[name^="traslado"]');
@@ -201,7 +195,6 @@ function habilitarBotonReubicar() {
         }
     });
 
-    // Habilita o deshabilita el botón de reubicar según las condiciones
     btnReubicar.disabled = !habilitado;
 }
 
@@ -220,17 +213,14 @@ function mostrarModalConfirmacion(event) {
     fondo.style.display = "block";  // Muestra el fondo semitransparente
 }
 
-// Función de confirmación antes de enviar el formulario
 function confirmarReubicacion(event) {
     event.preventDefault();  // Prevenir el comportamiento por defecto
-    console.log("Acción confirmada"); // Para depuración
-    document.querySelector('form').submit();  // Envía el formulario
+    document.querySelector('form').submit(); 
 }
 
-document.getElementById('btn-reubicar').addEventListener('click', mostrarModalConfirmacion);
 
 document.addEventListener('DOMContentLoaded', function () {
-    const btnReubicar = document.getElementById('btn-reubicar');
+    const btnReubicar = document.getElementById('btn-reubicar-submit');
     if (btnReubicar) {
         btnReubicar.addEventListener('click', mostrarModalConfirmacion);
     }
@@ -245,8 +235,8 @@ document.addEventListener('DOMContentLoaded', function () {
         btnCancelar.addEventListener('click', function () {
             const modal = document.getElementById('modalConfirmacion');
             const fondo = document.getElementById('hidden-body');
-            modal.style.display = "none";  // Cierra el modal
-            fondo.style.display = "none";  // Oculta el fondo
+            modal.style.display = "none";  
+            fondo.style.display = "none";  
         });
     }
 });
@@ -256,19 +246,19 @@ function validateProductos() {
     let itemsProductos = document.querySelectorAll('.item-traslado');
     let ulTraslado = document.getElementById('lista-traslado');
     let avisoVacio = document.getElementById('aviso-vacio');
-    let btnReubicar = document.getElementById('btn-reubicar');
+    let btnReubicarContainer = document.getElementById('btn-reubicar-container');
 
     if (itemsProductos.length > 0) {
         ulTraslado.style.visibility = 'visible';
         ulTraslado.style.height = '70vh';
         avisoVacio.style.display = 'none';
-        btnReubicar.style.display = 'block';
+        btnReubicarContainer.style.display = 'block';
         habilitarBotonReubicar(); 
     } else {
         ulTraslado.style.visibility = 'hidden';
         ulTraslado.style.height = '0';
         avisoVacio.style.display = 'block';
-        btnReubicar.style.display = 'none';
+        btnReubicarContainer.style.display = 'none';
     }
 }
 
