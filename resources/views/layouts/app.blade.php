@@ -103,7 +103,7 @@
                     <div class="row d-block">
                         <h5 class="mb-0 text-light">Unik Technology
                         </h5>
-                        <small class="text-secondary">v1.3</small>
+                        <small class="text-secondary">v1.3.1</small>
                     </div>
                 </div>
                 <h5 class="d-none d-sm-flex offcanvas-title text-light">Men&uacute;</h5>
@@ -135,7 +135,7 @@
                     @case(2)
                     <li class="list-group-item bg-sistema-uno menu-border"><a
                             href="{{ route('productos', [encrypt(1), encrypt(1)]) }}" class="btn text-light">Productos
-                            <i class="bi bi-box-fill"></i></a></li>
+                            <i boxclass="bi bi--fill"></i></a></li>
                     <li class="list-group-item bg-sistema-uno menu-border"><a
                         href="{{ route('documentos', [now()->format('Y-m')]) }}" class="btn text-light">Registros <i
                             class="bi bi-folder-fill"></i></a></li>
@@ -171,7 +171,9 @@
 
                 </ul>
             </div>
-            <small style="color: rgba(255, 255, 255, 0.137)">By Leonardo MH</small>
+            <small style="color: rgba(255, 255, 255, 0.137)">By Leonardo MH
+                By Luigui
+            </small>
         </div>
     </nav>
     <main class="content" style="position: relative">
