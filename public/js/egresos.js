@@ -15,7 +15,7 @@ function validateEgreso() {
 }
 
 function handleBtnRegistrar() {
-    let btnRegEgreso = document.getElementById('btnRegistrarEgreso');
+    let btnRegEgreso = document.getElementById('btn-create-egreso-submit');
 
     btnRegEgreso.disabled = validateEgreso();
 }
@@ -41,6 +41,7 @@ function updateDataRowSerial(object){
     let estado = rowSerialExists.querySelector('p');
 
     imagen.src = path + '/' + object.image;
+
     title.textContent = object.nombreProducto;
     modelo.textContent = object.modelo;
     codigo.textContent = object.codigoProducto;
@@ -121,8 +122,10 @@ document.getElementById('month').addEventListener('change', function () {
         alert('Fecha no valida.');
     } else {
         let url = "/egresos/" + selectedMonth;
+        console.log(selectedMonth);
 
         window.location.href = url;
+        
     }
 });
 
@@ -197,6 +200,18 @@ function formDetailEgreso(transaction){
     hiddenTransaction.value = transaction;
     formEgreso.submit();
 }
+
+function hiddeInputDate(inputId) {
+    let inputElement = document.getElementById(inputId);
+    
+    // Alternar visibilidad del input
+    if (inputElement.style.display === "none" || inputElement.style.display === "") {
+        inputElement.style.display = "block"; // Muestra el campo de fecha
+    } else {
+        inputElement.style.display = "none"; // Oculta el campo de fecha
+    }
+}
+
 
 function stringDate(date){
     let fecha = new Date(date);
