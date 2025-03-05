@@ -1,38 +1,62 @@
-function validateData() {
-    let titulo = document.getElementById('titulo-public').value;
-    let sku = document.getElementById('sku-public').value;
-    let producto = document.getElementById('search').value;
-    let cuenta = document.getElementById('cuenta-public').value;
-    let fecha = document.getElementById('fecha-public').value;
-    let precio = document.getElementById('precio-public').value;
-    let disabled = false;
+function alertBootstrap(usuario, message, type) {
+    var alertDiv = document.createElement('div');
+    alertDiv.classList.add('alert', 'alert-' + type, 'alert-dismissible', 'fade', 'show');
+    alertDiv.setAttribute('role', 'alert');
+    alertDiv.classList.add('alert-blue');
+    alertDiv.innerHTML = `Usuario: ${usuario} - ${message} <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>`;
+    document.body.appendChild(alertDiv);
 
-    if (titulo == '') {
-        disabled = true;
-    }
-
-    if (sku == '') {
-        disabled = true;
-    }
-
-    if (producto == '') {
-        disabled = true;
-    }
-
-    if (cuenta == '') {
-        disabled = true;
-    }
-
-    if (fecha == '') {
-        disabled = true;
-    }
-
-    if (precio == '') {
-        disabled = true;
-    }
-
-    return disabled;
+    // Eliminar el mensaje después de 8 segundos
+    setTimeout(function () {
+        alertDiv.remove();
+    }, 8000);
 }
+
+document.getElementById('fecha-public').addEventListener('blur',function(){
+    let today = new Date();
+    let diaSeleccinado= new Date(this.value);
+    if(diaSeleccinado>today){
+        alertBootstrap('Según Luigui lea el manual','Error en la fecha','danger');
+    }
+    });
+
+    function validateData() {
+        let titulo = document.getElementById('titulo-public').value;
+        let sku = document.getElementById('sku-public').value;
+        let producto = document.getElementById('search').value;
+        let cuenta = document.getElementById('cuenta-public').value; 
+        let fecha = document.getElementById('fecha-public').value;
+        let precio = document.getElementById('precio-public').value;
+        let disabled = false;
+    
+        
+        const hoy = new Date().toISOString().split('T')[0];
+        if (fecha > hoy) {
+            alertBootstrap('Según Luigui lea el manual Error en fecha', 'La fecha no puede ser posterior al día actual.', 'danger');
+            disabled = true;
+            document.getElementById('fecha-public').value = hoy; 
+        }
+    
+       
+        const camposRequeridos = {
+            'Título': titulo,
+            'SKU': sku,
+            'Producto': producto,
+            'Cuenta': cuenta,
+            'Fecha': fecha,
+            'Precio': precio
+        };
+    
+    
+        return disabled;
+    }
+    
+    document.addEventListener('DOMContentLoaded', function () {
+        const fechaInput = document.getElementById('fecha-public');
+        if (fechaInput) {
+            fechaInput.max = new Date().toISOString().split('T')[0];
+        }
+    });
 
 function dissableButton() {
     let btnSave = document.getElementById('btnSave');
