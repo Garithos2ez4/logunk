@@ -32,11 +32,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (fechaPedido && fechaPedido > fechaActual) {
             event.preventDefault();
-            alertBootstrap('La fecha de pedido no puede ser posterior a la fecha actual.', 'danger');        }
+            alertBootstrap('Segun Luigui ,La fecha de pedido no puede ser posterior a la fecha actual.', 'danger');        }
         
         if (fechaDespacho && fechaPedido && fechaDespacho < fechaPedido) {
             event.preventDefault();
-            alertBootstrap('La fecha de despacho debe ser igual o posterior a la fecha de pedido.', 'danger');        }
+            alertBootstrap('Segun Luigui, La fecha de despacho debe ser igual o posterior a la fecha de pedido.', 'danger');        }
     });
 
     validateSubmit();
