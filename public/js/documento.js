@@ -271,7 +271,7 @@ document.getElementById('btnIngreso').addEventListener('click', updateBtnAdd);
 document.getElementById('modal-input-price').addEventListener('input', validateDisabledRegistro);
 document.getElementById('modal-input-product').addEventListener('input', validateDisabledRegistro);
 document.getElementById('modal-select-medida').addEventListener('change', validateDisabledRegistro);
-document.getElementById('importe-descuento-comprobante').addEventListener('blur', updateTotalProductos);;
+document.getElementById('importe-descuento-comprobante').addEventListener('blur', updateTotalProductos);
 
 document.addEventListener('DOMContentLoaded', function() {
     validateDisabledRegistro();
