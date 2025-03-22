@@ -16,6 +16,7 @@ use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\ConfiguracionController;
 use App\Http\Controllers\DocumentoController;
 use App\Http\Controllers\GarantiaController;
+use App\Http\Controllers\ObservacionesController;
 use App\Http\Controllers\PdfController;
 
 //scripts
@@ -108,6 +109,8 @@ Route::middleware(['validate.session'])->group(function () {
     Route::post('/update-estado-publicacion', [PublicacionController::class, 'updateEstado'])->name('update-estado-publicacion');
     Route::get('/searchpublicacion', [PublicacionController::class, 'searchPublicacion'])->name('searchpublicacion');
 
+    Route::get('/observaciones', [ObservacionesController::class, 'index'])->name('observaciones');
+
     Route::get('/clientes',[ClienteController::class,'index'])->name('clientes');
     Route::get('/cliente/searchcliente',[ClienteController::class,'searchCliente'])->name('searchcliente');
     Route::post('/cliente/create',[ClienteController::class,'createCliente'])->name('createcliente');
@@ -146,7 +149,7 @@ Route::middleware(['validate.session'])->group(function () {
 
     Route::get('/generateSerialPdf/{idDocumento}', [PdfController::class, 'generateSerialPdf'])->name('generarSeriesPdf');
     Route::get('/pdf/serialbyproduct/{idProducto}', [PdfController::class, 'seriesByProductPdf'])->name('seriesXProducto');
-    Route::get('/reporteAlmacen', [PdfController::class, 'reportStockPdf'])->name('reportealmacen');
+    Route::get('/reporte/stock/{idAlmacen}', [PdfController::class, 'reportStockPdf'])->name('reportealmacen');
     Route::get('/pdf/garantia/{idGarantia}', [PdfController::class, 'garantiaPdf'])->name('garantiaPdf');
 });
 

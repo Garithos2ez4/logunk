@@ -10,6 +10,7 @@
         table {
             width: 100%;
             border-collapse: collapse;
+            margin-top: 20px;
         }
         th, td {
             border: 0.5px solid #000;
@@ -20,13 +21,14 @@
         th {
             background-color: #ffffff;
         }
-
         .header{
             background-color: #dddddd;
         }
-
         .index{
             width: 10px;
+        }
+        .almacen-column {
+            background-color: #f5f5f5;
         }
     </style>
 </head>
@@ -36,11 +38,9 @@
         <thead>
             <tr>
                 <th class="index header">#</th>
-                <th class="header">Codigo</th>
+                <th class="header">Código</th>
                 <th class="header">Modelo</th>
-                @foreach ($almacenes as $almacen)
-                <th class="header">{{$almacen->descripcion}}</th>
-                @endforeach
+                <th class="header almacen-column">{{ $almacen->descripcion }}</th>
             </tr>
         </thead>
         <tbody>
@@ -49,17 +49,21 @@
             @endphp
             @foreach ($productos as $producto)
                 <tr>
-                    <th class="index">{{$count}}</th>
-                    <th>{{$producto->codigoProducto}}</th>
-                    <th>{{$producto->modelo}}</th>
-                    @foreach ($producto->Inventario->sortBy('idAlmacen') as $inventario)
-                        <th>{{$inventario->stock}}</th>
-                    @endforeach
+                    <td class="index">{{ $count }}</td>
+                    <td>{{ $producto->codigoProducto }}</td>
+                    <td>{{ $producto->modelo }}</td>
+                    <td class="almacen-column">
+                        {{ $producto->Inventario->firstWhere('idAlmacen', $almacen->idAlmacen)->stock ?? 0 }}
+                    </td>
                 </tr>
                 @php
-                    $count ++;
+                    $count++;
                 @endphp
             @endforeach
+            <tr>
+                <td colspan="3" class="header">Total Stock</td>
+                <td class="header almacen-column">{{ $totalStock }}</td>
+            </tr>
         </tbody>
     </table>
 </body>

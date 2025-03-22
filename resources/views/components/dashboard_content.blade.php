@@ -112,15 +112,20 @@
                             <h4 class="mb-0">Almacenes</h4>
                             <small class="text-secondary">Stock de los almacenes</small>
                         </div>
-                        <div class="col-3 text-end">
-                            <button onclick="reportAlmacen()" class="btn btn-outline-danger btn-sm"><i class="bi bi-file-pdf"></i></button>
+                        <div class="col-3 d-flex justify-content-end align-items-center">
+                            <button onclick="reportAlmacen(1)" class="btn btn-outline-primary btn-sm  ms-2">
+                                <i class="bi bi-file-pdf"></i>
+                            </button>
+                            <button onclick="reportAlmacen(2)" class="btn btn-outline-danger btn-sm  ms-2">
+                                <i class="bi bi-file-pdf"></i>
+                            </button>
                         </div>
                         <div class="col-md-12 text-center">
                             <div class="card text-bg-light mb-3 h-100" style="max-width: auto;">
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <div class="grafico-pastel" >
+                                            <div class="grafico-pastel">
                                                 <div class="total-items">
                                                     <div class="d-inline">
                                                         <h1>{{$inventario}}</h1>
@@ -132,16 +137,16 @@
                                         <div class="col-md-12 text-start mt-2">
                                             <ul class="list-group list-group-flush">
                                                 @foreach ($stock as $key => $value)
-                                                    <li class="list-group-item">
-                                                        <div class="row">
-                                                            <div class="col-md-8">
-                                                                <i class="bi bi-circle-fill" style="color: {{$colors[$key]}}"></i> {{$value['almacen']->descripcion}}
-                                                            </div>
-                                                            <div class="col-md-4 text-center text-md-end">
-                                                                <span>{{$value['cantidad']}}</span>
-                                                            </div>
+                                                <li class="list-group-item">
+                                                    <div class="row">
+                                                        <div class="col-md-8">
+                                                            <i class="bi bi-circle-fill" style="color: {{$colors[$key]}}"></i> {{$value['almacen']->descripcion}}
                                                         </div>
-                                                    </li>
+                                                        <div class="col-md-4 text-center text-md-end">
+                                                            <span>{{$value['cantidad']}}</span>
+                                                        </div>
+                                                    </div>
+                                                </li>
                                                 @endforeach
                                             </ul>
                                         </div>
@@ -154,7 +159,7 @@
                 </div>
             </div>
         </div>
-    </div>
+        
     <br>
     <br>
 </div>
@@ -178,8 +183,9 @@
     }
 </style>
 <script>
-    function reportAlmacen() {
-        var url = "{{route('reportealmacen')}}";
-        window.open(url, '', 'width=800,height=600,scrollbars=yes,location=no,toolbar=no,status=no');
-    }
+    function reportAlmacen(idAlmacen) {
+    // Generar la URL usando el parámetro dinámico
+    const url = "{{ route('reportealmacen', ['idAlmacen' => 'ALMACEN_ID']) }}";
+    window.open ( url.replace('ALMACEN_ID', idAlmacen),'_blank');
+}
 </script>

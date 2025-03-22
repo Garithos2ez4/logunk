@@ -9,4 +9,5 @@ interface PdfServiceInterface
     public function getSerialsByProduct($idProducto);
     public function getOneProduct($idProducto);
     public function getOneGarantia($idGarantia);
+    public function getProductsWithStock($idAlmacen = null);
 }

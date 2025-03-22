@@ -17,10 +17,14 @@
     <br>
     
     <div class="row border shadow rounded-3 pt-2 mb-4">
-        <div class="col-md-12 border-bottom border-secondary pb-2">
+        <div class="col-md-8 border-bottom border-secondary">
             <h3>Grupos</h3>
-            <label class="text-secondary">Conjunto donde se agrupan los productos.</label>
         </div>
+        <div class="col-md-4 border-bottom border-secondary text-end">
+            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#marcaModal"><i class="bi bi-bookmark-plus-fill"></i></button>
+        </div>
+            <label class="text-secondary">Conjunto donde se agrupan los productos.</label>        
+    
         <div class="accordion accordion-flush" id="accordionGrupos">
             @php
                 $count = 0;

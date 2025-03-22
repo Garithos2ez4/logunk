@@ -34,6 +34,8 @@
             </h2>
         </div>
         <div class="col-6 col-md-6 text-end">
+            <a href="{{route('observaciones', [$fecha->format('Y-m')])}}" class="btn btn-success mb-2"><i class="bi bi-folder2-open"></i>
+                <span class="d-none d-md-inline">Observaciones</span></a>    
             <a href="{{route('ingresos', [$fecha->format('Y-m')])}}" class="btn btn-success mb-2"><i
                 class="bi bi-file-earmark-plus-fill"></i> <span class="d-none d-md-inline">Ingresos</span></a>
             <a href="{{route('egresos', [$fecha->format('Y-m')])}}" class="btn btn-warning mb-2"><i

@@ -119,7 +119,7 @@ class ProductoRepository implements ProductoRepositoryInterface
         return $productos;
     }
 
-    public function getProductsWithStock(){
+    /*public function getProductsWithStock(){
         $query = "
             SELECT p.*
             FROM Producto p
@@ -135,7 +135,35 @@ class ProductoRepository implements ProductoRepositoryInterface
             return Producto::find($item->idProducto); 
         });
         return $productos;
+    }*/
+    //Nueva funcion 
+    public function getProductsWithStock($idAlmacen = null)
+    {
+        $query = "
+            SELECT idProducto
+            FROM Inventario
+            WHERE stock > 0
+            " . ($idAlmacen ? " AND idAlmacen = ?" : "") . "
+            GROUP BY idProducto
+        ";
+    
+        $resultados = $idAlmacen 
+            ? DB::select($query, [$idAlmacen]) 
+            : DB::select($query);
+    
+        $idsProductos = collect($resultados)->pluck('idProducto');
+    
+        // Obtener todos los productos sin filtrar por estado
+        return Producto::whereIn('idProducto', $idsProductos)
+            ->with(['Inventario' => function ($query) use ($idAlmacen) {
+                if ($idAlmacen) {
+                    $query->where('idAlmacen', $idAlmacen);
+                }
+            }])
+            ->get();
     }
+    
+    
     
     public function validateSerial($id,$serial){
         $serial = Producto::join('DetalleComprobante', 'DetalleComprobante.idProducto', '=', 'Producto.idProducto')

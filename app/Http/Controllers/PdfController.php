@@ -25,18 +25,31 @@ class PdfController extends Controller
         return $pdf->stream('series.pdf');
     }
 
-    public function reportStockPdf()
-    {
-        $productos = $this->pdfService->getReportsAlmacen();
-        $almacenes = $this->pdfService->getAlmacenes();
-        $fechaActual = Carbon::now()->format('d-m-Y');
-        $data = ['title' => 'Reporte de stock '.$fechaActual,
-                'productos' => $productos,
-                'almacenes' => $almacenes];
-        $pdf = Pdf::loadView('pdf.stock_pdf', $data);
+    public function reportStockPdf($idAlmacen) {
+        $almacen = $this->pdfService->getAlmacenById($idAlmacen);
+        $productos = $this->pdfService->getProductsWithStock($idAlmacen);
         
-        return $pdf->stream('reporte_stock_'.$fechaActual.'.pdf');
+        // Calcular el total de stock
+        $totalStock = $productos->sum(function ($producto) use ($almacen) {
+            return $producto->Inventario
+                ->firstWhere('idAlmacen', $almacen->idAlmacen)
+                ->stock ?? 0;
+        });
+    
+        $fechaActual = Carbon::now()->format('d-m-Y');
+        $nombreAlmacen = $almacen->descripcion;
+    
+        $data = [
+            'title' => 'Reporte de stock - ' . $nombreAlmacen . ' - ' . $fechaActual,
+            'productos' => $productos,
+            'almacen' => $almacen,
+            'totalStock' => $totalStock 
+        ];
+    
+        $pdf = Pdf::loadView('pdf.stock_pdf', $data);
+        return $pdf->stream('reporte_stock_' . $nombreAlmacen . '_' . $fechaActual . '.pdf');
     }
+
 
     public function seriesByProductPdf($idProducto)
     {
@@ -48,8 +61,9 @@ class PdfController extends Controller
                 'registros' => $registros];
         $pdf = Pdf::loadView('pdf.series_by_products', $data);
         
-        return $pdf->stream('Series_disponibles_'.$producto->codigoProducto.'.pdf');
+        return $pdf->stream('Series_disponibles_'.$producto->modelo.'.pdf');
     }
+    
 
     public function garantiaPdf($idGarantia)
     {
