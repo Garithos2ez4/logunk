@@ -129,10 +129,16 @@ class ComprobanteRepository implements ComprobanteRepositoryInterface
         return Comprobante::orderBy('idComprobante', 'desc')->first();
     }
 
-    public function getAllRegistrosByComprobanteId($id){
-        return Comprobante::join('DetalleComprobante','DetalleComprobante.idComprobante','=','Comprobante.idComprobante')
-                ->join('RegistroProducto','DetalleComprobante.idDetalleComprobante','=','RegistroProducto.idDetalleComprobante')
-                ->select('RegistroProducto.*')->where('Comprobante.idComprobante','=',$id)->get();
+    public function getAllRegistrosByComprobanteId($id) {
+        return Comprobante::join('DetalleComprobante', 'DetalleComprobante.idComprobante', '=', 'Comprobante.idComprobante')
+            ->join('RegistroProducto', 'DetalleComprobante.idDetalleComprobante', '=', 'RegistroProducto.idDetalleComprobante')
+            ->join('Producto', 'DetalleComprobante.idProducto', '=', 'Producto.idProducto') 
+            ->select(
+                'RegistroProducto.*',
+                'Producto.modelo' 
+            )
+            ->where('Comprobante.idComprobante', $id)
+            ->get();
     }
     
     private function validateColumns($column){

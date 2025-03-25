@@ -214,8 +214,7 @@
                                                                 <div
                                                                     class="row text-center {{ $registro->estado == 'INVALIDO' ? 'text-danger text-decoration-line-through' : '' }}">
                                                                     <div class="col-6 col-md-3 text-start">
-                                                                        <label class="text-secondary fw-italic">Numero de
-                                                                            Serie</label>
+                                                                        <label class="text-secondary fw-italic">Numero de Serie</label>
                                                                         <p>{{ $registro->numeroSerie }}</p>
                                                                     </div>
                                                                     <div class="col-4 col-md-2">

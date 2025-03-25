@@ -35,21 +35,45 @@ class PdfService implements PdfServiceInterface
     public function getAlmacenById($idAlmacen) {
         return $this->almacenRepository->getOne('idAlmacen', $idAlmacen);
        }
-    public function getSerialsPrint($idComprobante){
+       public function getSerialsPrint($idComprobante) {
         $registros = $this->comprobanteRepository->getAllRegistrosByComprobanteId($idComprobante);
+        
+       //COMENTAR ESTA PARTE DEL CODIGO SI EN ALGÚN MOMENTO QUIERES USAR LOS NUMEROS DE SERIES QUE DIGITAS EN EL CAMPO SERIAL NUMBER
         $registrosFiltrados = $registros->filter(function($register) {
             return strpos($register->numeroSerie, 'UNK-') !== false;
         });
-
         $series = array();
-
-        foreach($registrosFiltrados as $reg){
-            $barcode = $this->generadorSeries->getBarcode($reg->numeroSerie, BarcodeGeneratorPNG::TYPE_CODE_128,1,50);
-            $series[] = ['serie' => $reg->numeroSerie,'barcode' => base64_encode($barcode)];
+        //Aqui usar $registros , para usar los numeros de serie comentados
+        foreach($registrosFiltrados as $reg) {
+            
+            if (strpos($reg->numeroSerie, 'UNK-') === 0) {
+               
+                $partes = explode('-', $reg->numeroSerie);
+                $modeloSinGuiones = str_replace('-', '', $reg->modelo);
+                $partes[1] = $modeloSinGuiones; 
+                $numeroSerieFormateado = implode('-', $partes);
+            } else {
+              
+                $numeroSerieFormateado = $reg->numeroSerie;
+            }
+    
+          
+            $barcode = $this->generadorSeries->getBarcode(
+                $numeroSerieFormateado,
+                BarcodeGeneratorPNG::TYPE_CODE_128,
+                1,
+                50
+            );
+    
+            // Agregar el número de serie formateado y el código de barras al array
+            $series[] = [
+                'serie' => $numeroSerieFormateado, 
+                'barcode' => base64_encode($barcode)
+            ];
         }
+    
         return $series;
     }
-
     public function getReportsAlmacen(){
         return $this->productoRepository->getProductsWithStock()->sortBy('codigoProducto');
     }
