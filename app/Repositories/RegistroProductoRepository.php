@@ -80,14 +80,17 @@ class RegistroProductoRepository implements RegistroProductoRepositoryInterface
         return $response;
     }
 
-    public function getSerialsByProduct($idProduct){
-        $response = RegistroProducto::join('DetalleComprobante','RegistroProducto.idDetalleComprobante','=','DetalleComprobante.idDetalleComprobante')
-                                    ->join('Producto','DetalleComprobante.idProducto','=','Producto.idProducto')
-                                    ->where('RegistroProducto.estado','<>','INVALIDO')
-                                    ->where('RegistroProducto.estado','<>','ENTREGADO')
-                                    ->where('RegistroProducto.estado','<>','GARANTIA')
-                                    ->where('Producto.idProducto','=',$idProduct)->get();
-        return $response;
+    public function getSerialsByProduct($idProduct, $idAlmacen = null) {
+        return RegistroProducto::join('DetalleComprobante', 'RegistroProducto.idDetalleComprobante', '=', 'DetalleComprobante.idDetalleComprobante')
+            ->join('Producto', 'DetalleComprobante.idProducto', '=', 'Producto.idProducto')
+            ->where('RegistroProducto.estado', '<>', 'INVALIDO')
+            ->where('RegistroProducto.estado', '<>', 'ENTREGADO')
+            ->where('RegistroProducto.estado', '<>', 'GARANTIA')
+            ->when($idAlmacen, function ($query) use ($idAlmacen) { // Filtro dinámico
+                $query->where('RegistroProducto.idAlmacen', $idAlmacen);
+            })
+            ->where('Producto.idProducto', $idProduct)
+            ->get();
     }
     
     public function create(array $data)

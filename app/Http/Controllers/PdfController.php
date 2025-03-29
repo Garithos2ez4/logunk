@@ -49,21 +49,24 @@ class PdfController extends Controller
         $pdf = Pdf::loadView('pdf.stock_pdf', $data);
         return $pdf->stream('reporte_stock_' . $nombreAlmacen . '_' . $fechaActual . '.pdf');
     }
-
-
-    public function seriesByProductPdf($idProducto)
+    public function seriesByProductPdf($idProducto, $idAlmacen = null)
     {
         $producto = $this->pdfService->getOneProduct($idProducto);
-        $registros = $this->pdfService->getSerialsByProduct($idProducto);
-
-        $data = ['title' => 'Series en existencia',
-                'producto' => $producto,
-                'registros' => $registros];
-        $pdf = Pdf::loadView('pdf.series_by_products', $data);
-        
-        return $pdf->stream('Series_disponibles_'.$producto->modelo.'.pdf');
-    }
+        $registros = $this->pdfService->getSerialsByProduct($idProducto, $idAlmacen); 
     
+        
+        $almacen = $idAlmacen ? $this->pdfService->getAlmacenById($idAlmacen) : null;
+        $nombreAlmacen = $almacen->descripcion;  
+        $data = [
+            'title' => 'Series en existencia - ' . $nombreAlmacen,
+            'producto' => $producto,
+            'registros' => $registros,
+            'almacen' => $almacen
+        ];
+    
+        $pdf = Pdf::loadView('pdf.series_by_products', $data);
+        return $pdf->stream("Series_disponibles_{$producto->modelo}" . ($almacen ? "_{$almacen->descripcion}" : '') . ".pdf");
+    }
 
     public function garantiaPdf($idGarantia)
     {

@@ -88,7 +88,7 @@ function dataModalDetalle(json) {
     hidden.value = json.registro_producto.idRegistro;
     ubicacion.value = json.registro_producto.idAlmacen;
     state.value = stateJson;
-    if(stateJson =='ENTREGADO' || stateJson == 'DEVOLUCION' || stateJson == 'GARANTIA'){
+    if(stateJson =='ENTREGADO' || stateJson == 'DEVOLUCION' || stateJson == 'GARANTIA'|| stateJson =='ABIERTO'){
         state.disabled = true;
     }else{
         state.disabled = false;

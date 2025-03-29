@@ -40,9 +40,10 @@ class RegistroProducto extends Model
     {
         return $this->belongsTo(DetalleComprobante::class,'idDetalleComprobante','idDetalleComprobante');
     }
-    public function producto() {
-        return $this->belongsTo(Producto::class, 'idProducto');
-    }
+    public function producto()
+{
+    return $this->belongsTo(Producto::class, 'idProducto', 'idProducto'); // ✅ Corrige las claves
+}
     
     public function IngresoProducto()
     {

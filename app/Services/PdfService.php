@@ -83,10 +83,20 @@ class PdfService implements PdfServiceInterface
         return $this->almacenRepository->all()->sortBy('idAlmacen');
     }
     
-    public function getSerialsByProduct($idProducto){
-        return $this->registroRepository->getSerialsByProduct($idProducto);
+    public function getSerialsByProduct($idProducto, $idAlmacen = null)
+    {
+        $registros = $this->registroRepository->getSerialsByProduct($idProducto, $idAlmacen);
+        $producto = $this->productoRepository->getOne('idProducto', $idProducto);
+    
+        return $registros->map(function ($registro) use ($producto) {
+            if (strpos($registro->numeroSerie, 'UNK-') === 0) {
+                $partes = explode('-', $registro->numeroSerie);
+                $partes[1] = str_replace('-', '', $producto->codigoProducto);
+                $registro->numeroSerie = implode('-', $partes);
+            }
+            return $registro;
+        });
     }
-
     public function getOneProduct($idProducto){
         return $this->productoRepository->getOne('idProducto',$idProducto);
     }
