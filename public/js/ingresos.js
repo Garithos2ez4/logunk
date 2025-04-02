@@ -87,12 +87,17 @@ function dataModalDetalle(json) {
     observacion.value = json.registro_producto.observacion;
     hidden.value = json.registro_producto.idRegistro;
     ubicacion.value = json.registro_producto.idAlmacen;
-    state.value = stateJson;
-    if(stateJson =='ENTREGADO' || stateJson == 'DEVOLUCION' || stateJson == 'GARANTIA'|| stateJson =='ABIERTO'){
-        state.disabled = true;
-    }else{
-        state.disabled = false;
-    }
+    const stateSelect = document.getElementById('state-modal-detail');
+    const currentState = json.registro_producto.estado;
+
+    Array.from(stateSelect.options).forEach(option => {
+        if (option.value === 'ENTREGADO') {
+            option.disabled = currentState !== 'DEVOLUCION'=='ABIERTO'; // ✅
+        }
+    });
+
+    // Mantener el dropdown habilitado siempre
+    stateSelect.disabled = false;
     myModal.show();
 }
 

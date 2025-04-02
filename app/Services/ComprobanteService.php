@@ -240,7 +240,7 @@ class ComprobanteService implements ComprobanteServiceInterface
         }
     }
 
-    private function generateSerial($idProduct){
+    private function generateSerial($idProduct) {
         try {
             $product = $this->productoRepository->getOne('idProducto', $idProduct);
             
@@ -248,7 +248,15 @@ class ComprobanteService implements ComprobanteServiceInterface
                 throw new \Exception('Producto no encontrado.');
             }
     
-            $parcialCode = 'UNK-' . $product->codigoProducto;
+            // Normalizar modelo (eliminar "-", "+" y espacios)
+            $modeloFormateado = str_replace(['-', '+', ' '], '', $product->modelo);
+            
+            // Validar modelo no vacío después de limpieza
+            if (empty($modeloFormateado)) {
+                throw new \Exception('El modelo no puede quedar vacío después de la normalización');
+            }
+    
+            $parcialCode = 'UNK-' . $modeloFormateado;
             $validateCode = $this->registroProductoRepository->searchList('numeroSerie', $parcialCode);
             
             $code = $parcialCode . '-' . (100000 + (count($validateCode) + 1));
