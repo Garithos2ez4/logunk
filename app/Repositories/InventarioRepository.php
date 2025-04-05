@@ -76,22 +76,27 @@ class InventarioRepository implements InventarioRepositoryInterface
         return $inventarios;
     }
     
-    public function addStock($idProducto,$idAlmacen){
-        try{
-            $inventario = Inventario::where('idProducto', '=', $idProducto)
-            ->where('idAlmacen', '=', $idAlmacen)
-            ->first();
-            if ($inventario) {
-                $inventario->stock++;
-                $inventario->save();
-            } else {
-                // Manejo si no se encuentra el inventario
-                throw new Exception('Inventario no encontrado.');
+    public function addStock($idProducto, $idAlmacen) {
+        try {
+            $inventario = Inventario::where('idProducto', $idProducto)
+                ->where('idAlmacen', $idAlmacen)
+                ->first();
+    
+            if (!$inventario) {
+                // Crear registro si no existe
+                $inventario = Inventario::create([
+                    'idProducto' => $idProducto,
+                    'idAlmacen' => $idAlmacen,
+                    'stock' => 0
+                ]);
             }
-        }catch(Exception $e){
-            throw new Exception('Error en la operacion.');
+    
+            $inventario->stock++;
+            $inventario->save();
+    
+        } catch (Exception $e) {
+            throw new Exception('Error en la operación: ' . $e->getMessage());
         }
-        
     }
     
     public function removeStock($idProducto,$idAlmacen){
