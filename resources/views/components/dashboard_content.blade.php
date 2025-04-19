@@ -113,12 +113,12 @@
                             <small class="text-secondary">Stock de los almacenes</small>
                         </div>
                         <div class="col-3 d-flex justify-content-end align-items-center">
-                            <button onclick="reportAlmacen(1)" class="btn btn-outline-primary btn-sm  ms-2">
-                                <i class="bi bi-file-pdf"></i>
-                            </button>
-                            <button onclick="reportAlmacen(2)" class="btn btn-outline-danger btn-sm  ms-2">
-                                <i class="bi bi-file-pdf"></i>
-                            </button>
+                            @foreach ($stock as $key => $value)
+                                <button onclick="reportAlmacen({{ $value['almacen']->idAlmacen }})" 
+                                        class="btn btn-outline-danger btn-sm ms-2">
+                                    <i class="bi bi-file-pdf"></i>
+                                </button>
+                            @endforeach
                         </div>
                         <div class="col-md-12 text-center">
                             <div class="card text-bg-light mb-3 h-100" style="max-width: auto;">

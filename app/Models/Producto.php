@@ -115,6 +115,9 @@ class Producto extends Model
     
         return $images;
     }
+    public function registros() {
+        return $this->hasMany(RegistroProducto::class, 'idProducto', 'idProducto');
+    }
     
     public function estadoColor(){
         if ($this->estadoProductoWeb == 'DISPONIBLE') {

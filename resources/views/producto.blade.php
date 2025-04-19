@@ -233,22 +233,17 @@
     </div>
     <div class="row">
         <div class="col-3 d-flex flex-column gap-2">
+            @foreach ($producto->Inventario as $inv)
             @php
-                $totalInv = 0;
+                $stockAlmacen = $inv->stock;
+                if ($stockAlmacen > 0) {
+                    $almacenId = $inv->idAlmacen;
+                    $descripcionAlmacen = $inv->almacen->descripcion ?? 'Almacén Desconocido';
+                    echo '<button class="btn btn-danger mb-2 text-nowrap" onclick="reportSerials(' . $almacenId . ')">';
+                    echo '<i class="bi bi-file-earmark-pdf"></i> Series - ' . $descripcionAlmacen . '</button>';
+                }
             @endphp
-     @foreach ($producto->Inventario as $inv)
-                @if ($inv->idAlmacen == 1 || $inv->idAlmacen == 2)
-                    @php
-                        $stockAlmacen = $inv->stock;
-                        if ($stockAlmacen > 0) {
-                            $almacenId = $inv->idAlmacen;
-                            $descripcionAlmacen = $inv->almacen->descripcion ?? 'Almacén Desconocido';
-                            echo '<button class="btn btn-danger mb-2 text-nowrap" onclick="reportSerials(' . $almacenId . ')">';
-                            echo '<i class="bi bi-file-earmark-pdf"></i> Series - ' . $descripcionAlmacen . '</button>';
-                        }
-                    @endphp
-                @endif
-            @endforeach
+        @endforeach
         </div>
         <div class="col-6 text-center">
             <button type="submit" class="btn btn-success" id="btnSave" disabled>Guardar <i class="bi bi-floppy"></i></button>

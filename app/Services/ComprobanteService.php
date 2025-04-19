@@ -248,10 +248,8 @@ class ComprobanteService implements ComprobanteServiceInterface
                 throw new \Exception('Producto no encontrado.');
             }
     
-            // Normalizar modelo (eliminar "-", "+" y espacios)
             $modeloFormateado = str_replace(['-', '+', ' '], '', $product->modelo);
             
-            // Validar modelo no vacío después de limpieza
             if (empty($modeloFormateado)) {
                 throw new \Exception('El modelo no puede quedar vacío después de la normalización');
             }

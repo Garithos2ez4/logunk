@@ -27,30 +27,29 @@
 </head>
 <body>
     <h2>{{ $title }}</h2>
-    <h3>{{$producto->nombreProducto}}</h3>
-    <h3 style="color: #555555">{{$producto->modelo}} (<em>{{$producto->modelo}}</em>)</h3>
+    <h3>{{ $producto->nombreProducto }}</h3>
+    <h3 style="color: #555555">{{ $producto->modelo }}</h3>
+    
     <table>
         <tbody>
-            @foreach ($registros as $index => $reg)
-                @if ($index % 4 == 0)
-                    <tr>
-                @endif
-                <td>
-                    <div>
-                        <small>{{ $reg->numeroSerie }}</small>
-                    </div>
-                    
-                </td>
-                @if ($index % 4 == 3 || $index == count($registros) - 1)
-                    @if ($index % 3 != 3)
-                        @for ($i = 0; $i < 3 - ($index % 4); $i++)
-                            <td></td>
-                        @endfor
-                    @endif
-                    </tr>
-                @endif
+            @foreach ($registros->chunk(4) as $chunk) <!-- Divide los registros en grupos de 4 -->
+                <tr>
+                    @foreach ($chunk as $reg)
+                        <td>
+                            <div>
+                                <small>{{ $reg->numeroSerie }}</small>
+                            </div>
+                        </td>
+                    @endforeach
+                    <!-- Rellena celdas vacías si el último grupo tiene menos de 4 elementos -->
+                    @for ($i = 0; $i < 4 - $chunk->count(); $i++)
+                        <td></td>
+                    @endfor
+                </tr>
             @endforeach
         </tbody>
+    </table>
+</body>
     </table>
 </body>
 </html>
