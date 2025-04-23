@@ -14,18 +14,18 @@ function validateEgreso() {
     return disabledInput;
 }
 
-function handleBtnRegistrar() {
-    let btnRegEgreso = document.getElementById('btn-create-egreso-submit');
+/*function handleBtnRegistrar() {
+    //let btnRegEgreso = document.getElementById('btn-create-egreso-submit');
 
     btnRegEgreso.disabled = validateEgreso();
 }
 
-document.addEventListener('DOMContentLoaded', function () {
+//document.addEventListener('DOMContentLoaded', function () {
     handleBtnRegistrar();
 });
 
 
-document.getElementById('check-sku-egreso').addEventListener('change', handleBtnRegistrar);
+document.getElementById('check-sku-egreso').addEventListener('change', handleBtnRegistrar);*/
 
 let allInputsEgreso = document.querySelectorAll('.input-egreso');
 allInputsEgreso.forEach(function (x) {

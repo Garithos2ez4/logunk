@@ -245,13 +245,13 @@ class ComprobanteService implements ComprobanteServiceInterface
             $product = $this->productoRepository->getOne('idProducto', $idProduct);
             
             if (!$product) {
-                throw new \Exception('Producto no encontrado.');
+                throw new Exception ('Producto no encontrado.');
             }
     
             $modeloFormateado = str_replace(['-', '+', ' '], '', $product->modelo);
             
             if (empty($modeloFormateado)) {
-                throw new \Exception('El modelo no puede quedar vacío después de la normalización');
+                throw new Exception ('El modelo no puede quedar vacío después de la normalización');
             }
     
             $parcialCode = 'UNK-' . $modeloFormateado;
@@ -261,8 +261,8 @@ class ComprobanteService implements ComprobanteServiceInterface
             
             return $code;
     
-        } catch (\Exception $e) {
-            throw new \Exception('Error al generar el número de serie: ' . $e->getMessage());
+        } catch (Exception $e) {
+            throw new Exception ('Error al generar el número de serie: ' . $e->getMessage());
         }
     }
 
