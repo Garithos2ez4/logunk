@@ -1,4 +1,3 @@
-
 const validateIconSku = document.getElementById('sku-modal-egreso-validate');
 const hiddenBody = document.getElementById('hidden-body');
 const itemEgresoDiv = document.getElementById('div-items-create-egreso');
@@ -20,56 +19,60 @@ const cartManager = {
 };
 
 document.addEventListener('DOMContentLoaded', function() {
-    var fechaActual = new Date().toISOString().split('T')[0]; 
+    const fechaActual = new Date().toISOString().split('T')[0];
     document.querySelector('[name="fechapedido"]').setAttribute('max', fechaActual);
 
-    document.querySelector('[name="fechapedido"]').addEventListener('blur', validateFechas);
-    document.querySelector('[name="fechadespacho"]').addEventListener('blur', validateFechas);
-
-    document.querySelector('form').addEventListener('submit', function(event) {
-        var fechaPedido = document.querySelector('[name="fechapedido"]').value;
-        var fechaDespacho = document.querySelector('[name="fechadespacho"]').value;
-
-        if (fechaPedido && fechaPedido > fechaActual) {
-            event.preventDefault();
-            alertBootstrap('Segun Luigui ,La fecha de pedido no puede ser posterior a la fecha actual.', 'danger');        }
-        
-        if (fechaDespacho && fechaPedido && fechaDespacho < fechaPedido) {
-            event.preventDefault();
-            alertBootstrap('Segun Luigui, La fecha de despacho debe ser igual o posterior a la fecha de pedido.', 'danger');        }
+  
+    document.querySelector('[name="fechapedido"]').addEventListener('blur', function() {
+        const fechaDespacho = document.querySelector('[name="fechadespacho"]');
+        fechaDespacho.setAttribute('min', this.value || '');
+        validateFechas();
     });
 
-    validateSubmit();
+    document.querySelector('form').addEventListener('submit', function(event) {
+        if (!validateFechas(event)) {
+            event.preventDefault();
+        }
+    });
 });
 
-function validateFechas() {
-    var fechaPedido = document.querySelector('[name="fechapedido"]').value;
-    var fechaDespacho = document.querySelector('[name="fechadespacho"]');
+function validateFechas(event = null) {
+    const fechaActual = new Date().toISOString().split('T')[0]; // Calcular en tiempo real
+    const fechaPedido = document.querySelector('[name="fechapedido"]').value;
+    const fechaDespacho = document.querySelector('[name="fechadespacho"]').value;
+    const añoPedido = new Date(fechaPedido).getFullYear();
 
-    if (fechaPedido) {
-        fechaDespacho.setAttribute('min', fechaPedido); 
-    } else {
-        fechaDespacho.removeAttribute('min'); 
+
+    // Validación 1: Fecha de pedido <= Fecha actual
+    if (fechaPedido && new Date(fechaPedido) > new Date(fechaActual)) {
+        if (event) event.preventDefault();
+        alertBootstrap(' La fecha de pedido no puede ser posterior a la fecha actual.', 'danger');
+        return false;
+    }
+    if (añoPedido < 2019) {
+        if (event) event.preventDefault();
+        alertBootstrap(' El año de pedido no puede ser menor a 2019', 'danger');
+        return false;
     }
 
-    if (fechaDespacho.value && fechaPedido && fechaDespacho.value < fechaPedido) {
-        alertBootstrap('La fecha de despacho debe ser igual o posterior a la fecha de pedido.', 'danger');
+    // Validación 2: Fecha de despacho >= Fecha de pedido
+    if (fechaDespacho && fechaPedido && new Date(fechaDespacho) < new Date(fechaPedido)) {
+        if (event) event.preventDefault();
+        alertBootstrap(' La fecha de despacho debe ser igual o posterior a la fecha de pedido.', 'danger');
+        return false;
     }
+
+    return true;
 }
 
-function alertBootstrap(usuario, message, type) {
-    var alertDiv = document.createElement('div');
+function alertBootstrap(message, type) {
+    const alertDiv = document.createElement('div');
     alertDiv.classList.add('alert', 'alert-' + type, 'alert-dismissible', 'fade', 'show');
     alertDiv.setAttribute('role', 'alert');
-    
-    // Personalizando el mensaje de alerta para incluir el nombre del usuario
-    alertDiv.innerHTML = `Usuario: ${usuario} - ${message} <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>`;
+    alertDiv.innerHTML = `<strong> dice:</strong> ${message}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>`;
+    document.getElementById('form-container').appendChild(alertDiv);
 
-    document.body.appendChild(alertDiv);
-
-    setTimeout(function() {
-        alertDiv.remove();
-    }, 8000);
+    setTimeout(() => alertDiv.remove(), 1000);
 }
 
 window.cartManager = cartManager;
@@ -367,6 +370,10 @@ function validateSubmit() {
 
     if(inputBody.length < 1){
         validate = false; 
+    }
+    const fechasValidas = validateFechas(); // Retorna true/false
+    if (!fechasValidas) {
+        validate = false;
     }
 
     btnSubmitCreateEgreso.disabled = !validate; 
