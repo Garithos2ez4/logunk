@@ -20,27 +20,65 @@ const cartManager = {
 
 document.addEventListener('DOMContentLoaded', function() {
     const fechaActual = new Date().toISOString().split('T')[0];
+    
     document.querySelector('[name="fechapedido"]').setAttribute('max', fechaActual);
 
-  
     document.querySelector('[name="fechapedido"]').addEventListener('blur', function() {
         const fechaDespacho = document.querySelector('[name="fechadespacho"]');
-        fechaDespacho.setAttribute('min', this.value || '');
-        validateFechas();
+        
+        if(this.value) {
+            const fechaPedido = new Date(this.value);
+            
+            if(isNaN(fechaPedido.getTime())) {
+                alertBootstrap('Formato de fecha inválido', 'danger');
+                this.classList.add('is-invalid');
+                return;
+            }
+
+            if(fechaPedido.getFullYear() < 2019) {
+                alertBootstrap('El año de pedido no puede ser menor a 2019', 'danger');
+                this.classList.add('is-invalid');
+                return;
+            }
+            
+            this.classList.remove('is-invalid');
+            fechaDespacho.setAttribute('min', this.value);
+        }
+        validateSubmit(); 
+    });
+    document.querySelector('[name="fechadespacho"]').addEventListener('blur', function () {
+        const fechaPedido = document.querySelector('[name="fechapedido"]').value;
+        const fechaDespacho = this.value;
+    
+        if (fechaPedido && fechaDespacho) {
+            const fPedido = new Date(fechaPedido);
+            const fDespacho = new Date(fechaDespacho);
+    
+            if (fDespacho < fPedido) {
+                alertBootstrap('La fecha de despacho debe ser igual o posterior a la fecha de pedido.', 'danger');
+                this.classList.add('is-invalid');
+                return;
+            }
+        }
+    
+        this.classList.remove('is-invalid');
+        validateSubmit();
     });
 
     document.querySelector('form').addEventListener('submit', function(event) {
         if (!validateFechas(event)) {
             event.preventDefault();
+            alertBootstrap('Error en las fechas. Verifique los datos.', 'danger');
         }
     });
 });
+
 
 function validateFechas(event = null) {
     const fechaActual = new Date().toISOString().split('T')[0]; // Calcular en tiempo real
     const fechaPedido = document.querySelector('[name="fechapedido"]').value;
     const fechaDespacho = document.querySelector('[name="fechadespacho"]').value;
-    const añoPedido = new Date(fechaPedido).getFullYear();
+ 
 
 
     // Validación 1: Fecha de pedido <= Fecha actual
@@ -49,10 +87,14 @@ function validateFechas(event = null) {
         alertBootstrap(' La fecha de pedido no puede ser posterior a la fecha actual.', 'danger');
         return false;
     }
-    if (añoPedido < 2019) {
-        if (event) event.preventDefault();
-        alertBootstrap(' El año de pedido no puede ser menor a 2019', 'danger');
-        return false;
+    if (fechaPedido < 2019) {
+        const fechaObj = new Date(fechaPedido);
+        
+        if(fechaObj.getFullYear() < 2019) {
+            if(event) event.preventDefault();
+            alertBootstrap('El año de pedido no puede ser menor a 2019', 'danger');
+            return false;
+        }
     }
 
     // Validación 2: Fecha de despacho >= Fecha de pedido
@@ -371,9 +413,16 @@ function validateSubmit() {
     if(inputBody.length < 1){
         validate = false; 
     }
-    const fechasValidas = validateFechas(); // Retorna true/false
+    const fechasValidas = validateFechas(); 
     if (!fechasValidas) {
         validate = false;
+    }
+    const fechaPedidoInput = document.querySelector('[name="fechapedido"]');
+    if (fechaPedidoInput && fechaPedidoInput.value) {
+        const anio = new Date(fechaPedidoInput.value).getFullYear();
+        if (anio < 2019) {
+            validate = false;
+        }
     }
 
     btnSubmitCreateEgreso.disabled = !validate; 
