@@ -21,8 +21,10 @@ const cartManager = {
 document.addEventListener('DOMContentLoaded', function() {
     const fechaActual = new Date().toISOString().split('T')[0];
     
+    // Configuración inicial para fecha de pedido
     document.querySelector('[name="fechapedido"]').setAttribute('max', fechaActual);
 
+    // Validación para fecha de pedido (2019)
     document.querySelector('[name="fechapedido"]').addEventListener('blur', function() {
         const fechaDespacho = document.querySelector('[name="fechadespacho"]');
         
@@ -44,67 +46,80 @@ document.addEventListener('DOMContentLoaded', function() {
             this.classList.remove('is-invalid');
             fechaDespacho.setAttribute('min', this.value);
         }
-        validateSubmit(); 
+        validateSubmit();
     });
-    document.querySelector('[name="fechadespacho"]').addEventListener('blur', function () {
+
+    // Validación para fecha de despacho
+    document.querySelector('[name="fechadespacho"]').addEventListener('blur', function() {
         const fechaPedido = document.querySelector('[name="fechapedido"]').value;
-        const fechaDespacho = this.value;
-    
-        if (fechaPedido && fechaDespacho) {
-            const fPedido = new Date(fechaPedido);
-            const fDespacho = new Date(fechaDespacho);
-    
-            if (fDespacho < fPedido) {
-                alertBootstrap('La fecha de despacho debe ser igual o posterior a la fecha de pedido.', 'danger');
+        const fechaDespachoValue = this.value;
+        
+        if(!fechaDespachoValue) return;
+
+        const fechaDespacho = new Date(fechaDespachoValue);
+        
+        // Validación básica de formato
+        if(isNaN(fechaDespacho.getTime())) {
+            alertBootstrap('Formato de fecha inválido', 'danger');
+            this.classList.add('is-invalid');
+            return;
+        }
+
+        // Validación contra fecha de pedido
+        if(fechaPedido) {
+            const fechaPedidoObj = new Date(fechaPedido);
+            
+            if(fechaDespacho < fechaPedidoObj) {
+                alertBootstrap('La fecha de despacho debe ser posterior al pedido', 'danger');
                 this.classList.add('is-invalid');
                 return;
             }
         }
-    
+
         this.classList.remove('is-invalid');
         validateSubmit();
     });
 
+    // Validación final al enviar
     document.querySelector('form').addEventListener('submit', function(event) {
         if (!validateFechas(event)) {
             event.preventDefault();
-            alertBootstrap('Error en las fechas. Verifique los datos.', 'danger');
         }
     });
 });
 
-
 function validateFechas(event = null) {
-    const fechaActual = new Date().toISOString().split('T')[0]; // Calcular en tiempo real
-    const fechaPedido = document.querySelector('[name="fechapedido"]').value;
-    const fechaDespacho = document.querySelector('[name="fechadespacho"]').value;
- 
+    const fechaPedido = document.querySelector('[name="fechapedido"]');
+    const fechaDespacho = document.querySelector('[name="fechadespacho"]');
+    let isValid = true;
 
-
-    // Validación 1: Fecha de pedido <= Fecha actual
-    if (fechaPedido && new Date(fechaPedido) > new Date(fechaActual)) {
-        if (event) event.preventDefault();
-        alertBootstrap(' La fecha de pedido no puede ser posterior a la fecha actual.', 'danger');
-        return false;
-    }
-    if (fechaPedido < 2019) {
-        const fechaObj = new Date(fechaPedido);
-        
-        if(fechaObj.getFullYear() < 2019) {
-            if(event) event.preventDefault();
-            alertBootstrap('El año de pedido no puede ser menor a 2019', 'danger');
-            return false;
+    // Validación año 2019
+    if(fechaPedido.value) {
+        const añoPedido = new Date(fechaPedido.value).getFullYear();
+        if(añoPedido < 2019) {
+            isValid = false;
+            fechaPedido.classList.add('is-invalid');
+            if(event) {
+                alertBootstrap('El año de pedido no puede ser menor a 2019', 'danger');
+            }
         }
     }
 
-    // Validación 2: Fecha de despacho >= Fecha de pedido
-    if (fechaDespacho && fechaPedido && new Date(fechaDespacho) < new Date(fechaPedido)) {
-        if (event) event.preventDefault();
-        alertBootstrap(' La fecha de despacho debe ser igual o posterior a la fecha de pedido.', 'danger');
-        return false;
+    // Validación secuencia temporal
+    if(fechaPedido.value && fechaDespacho.value) {
+        const fPedido = new Date(fechaPedido.value);
+        const fDespacho = new Date(fechaDespacho.value);
+        
+        if(fDespacho < fPedido) {
+            isValid = false;
+            fechaDespacho.classList.add('is-invalid');
+            if(event) {
+                alertBootstrap('La fecha de despacho debe ser posterior al pedido', 'danger');
+            }
+        }
     }
 
-    return true;
+    return isValid;
 }
 
 function alertBootstrap(message, type) {
