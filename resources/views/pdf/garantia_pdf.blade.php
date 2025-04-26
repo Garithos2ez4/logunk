@@ -4,18 +4,31 @@
     <meta charset="UTF-8">
     <title>{{ $title }}</title>
     <style>
-        body {
+         body {
             font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 10px;
+            min-height: 95vh;
+            position: relative;
         }
         table {
             width: 100%;
             border-collapse: collapse;
             table-layout: fixed;
+            margin-bottom: 10px;
+        
+        }
+        .firma-cliente {
+            border-top: 1px solid black;
+            width: 180px;
+            text-align: center;
+            padding-top: 5px;
+            margin-left: 20px;
         }
         th, td {
-            font-size: 10px;
+            font-size: 9px;
             border: 0.5px solid #000;
-            padding: 5px;
+            padding: 4px;
             background-color: #f7f7f7;
             width: calc(100% / 6);
         }
@@ -24,6 +37,7 @@
         }
         .name-data {
             font-weight: bold; 
+            font-size: 9px !important;
         }
         .img-cab {
             width:100% ;
@@ -35,6 +49,13 @@
         .footerDiv {
             width: 100%;
             text-align: right;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-top: 15px;
+        }
+        .compact-row td {
+            padding: 2px !important;
         }
     </style>
 </head>
@@ -163,7 +184,11 @@
     </table>
     <div class="footerDiv">
         <img src="{{$firma}}" style="width: 150px" alt="">
+
+      <div class="firma-cliente">
+        FIRMA DEL CLIENTE
     </div>
+</div>
     <br>
     <br>
     <table>
@@ -290,6 +315,10 @@
     </table>
     <div class="footerDiv">
         <img src="{{$firma}}" style="width: 150px" alt="">
+ 
+    <div class="firma-cliente">
+        FIRMA DEL CLIENTE
     </div>
+</div>
 </body>
 </html>
