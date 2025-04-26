@@ -1,9 +1,9 @@
-function alertBootstrap(usuario, message, type) {
+function alertBootstrap(message, type) {
     var alertDiv = document.createElement('div');
     alertDiv.classList.add('alert', 'alert-' + type, 'alert-dismissible', 'fade', 'show');
     alertDiv.setAttribute('role', 'alert');
     alertDiv.classList.add('alert-blue');
-    alertDiv.innerHTML = `Usuario: ${usuario} - ${message} <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>`;
+    alertDiv.innerHTML = `${message} <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>`;
     document.body.appendChild(alertDiv);
 
     // Eliminar el mensaje después de 8 segundos
@@ -32,7 +32,7 @@ document.getElementById('fecha-public').addEventListener('blur',function(){
         
         const hoy = new Date().toISOString().split('T')[0];
         if (fecha > hoy) {
-            alertBootstrap('Según Luigui lea el manual Error en fecha', 'La fecha no puede ser posterior al día actual.', 'danger');
+            alertBootstrap('Según Alonso lea el manual Error en fecha', 'danger');
             disabled = true;
             document.getElementById('fecha-public').value = hoy; 
         }
