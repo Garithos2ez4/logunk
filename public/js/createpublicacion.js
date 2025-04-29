@@ -12,21 +12,52 @@ function alertBootstrap(message, type) {
     }, 8000);
 }
 
-document.getElementById('fecha-public').addEventListener('blur',function(){
-    let today = new Date();
-    let diaSeleccinado= new Date(this.value);
-    if(diaSeleccinado>today){
-        alertBootstrap('Según Luigui lea el manual','Error en la fecha','danger');
-    }
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    const fechaActual = new Date().toISOString().split('T')[0];
+    
+
+    const fechaPublicInput = document.getElementById('fecha-public');
+    fechaPublicInput.setAttribute('max', fechaActual);
+
+    
+    fechaPublicInput.addEventListener('blur', function() {
+        if(this.value) {
+            const fecha = new Date(this.value);
+            
+        
+            if(isNaN(fecha.getTime())) {
+                alertBootstrap('Formato de fecha inválido', 'danger');
+                this.classList.add('is-invalid');
+                return;
+            }
+
+          
+            if(fecha.getFullYear() < 2019) {
+                alertBootstrap('El año no puede ser menor a 2019', 'danger');
+                this.classList.add('is-invalid');
+                return;
+            }
+
+            this.classList.remove('is-invalid');
+        }
     });
 
+ 
+    document.querySelector('form').addEventListener('submit', function(event) {
+        const fecha = new Date(fechaPublicInput.value);
+        
+        if(fecha.getFullYear() < 2019) {
+            event.preventDefault();
+            alertBootstrap('El año no puede ser menor a 2019', 'danger');
+            fechaPublicInput.classList.add('is-invalid');
+        }
+    });
+});
     function validateData() {
-        let titulo = document.getElementById('titulo-public').value;
-        let sku = document.getElementById('sku-public').value;
-        let producto = document.getElementById('search').value;
-        let cuenta = document.getElementById('cuenta-public').value; 
+       
         let fecha = document.getElementById('fecha-public').value;
-        let precio = document.getElementById('precio-public').value;
         let disabled = false;
     
         
@@ -34,30 +65,41 @@ document.getElementById('fecha-public').addEventListener('blur',function(){
         if (fecha > hoy) {
             alertBootstrap('Según Alonso lea el manual Error en fecha', 'danger');
             disabled = true;
-            document.getElementById('fecha-public').value = hoy; 
-        }
+            }
     
        
-        const camposRequeridos = {
-            'Título': titulo,
-            'SKU': sku,
-            'Producto': producto,
-            'Cuenta': cuenta,
-            'Fecha': fecha,
-            'Precio': precio
-        };
+        document.getElementById('fecha-public').addEventListener('blur', function(){
+            const today = new Date();
+            const diaSeleccionado = new Date(this.value);
+            
+            // Validación combinada
+            if(isNaN(diaSeleccionado.getTime())) {
+                alertBootstrap('Formato de fecha inválido', 'warning');
+                this.classList.add('is-invalid');
+                return;
+            }
+            
+            if(diaSeleccionado.getFullYear() < 2019) {
+                alertBootstrap('El año no puede ser menor a 2019', 'danger');
+                this.classList.add('is-invalid');
+                return;
+            }
+            
+            if(diaSeleccionado > today) {
+                alertBootstrap('La fecha no puede ser futura', 'succes');
+                this.classList.add('is-invalid');
+                return;
+            }
+            
+            this.classList.remove('is-invalid');
+            dissableButton();
+        });
     
     
         return disabled;
+        
     }
     
-    document.addEventListener('DOMContentLoaded', function () {
-        const fechaInput = document.getElementById('fecha-public');
-        if (fechaInput) {
-            fechaInput.max = new Date().toISOString().split('T')[0];
-        }
-    });
-
 function dissableButton() {
     let btnSave = document.getElementById('btnSave');
     if (validateData()) {
