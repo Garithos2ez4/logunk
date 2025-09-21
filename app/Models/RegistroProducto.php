@@ -16,6 +16,7 @@ class RegistroProducto extends Model
     protected $fillable = ['idRegistro',
                             'idDetalleComprobante',
                             'idAlmacen',
+                            'observacion',
                             'numeroSerie',
                             'estado',
                             'fechaMovimiento',
@@ -62,6 +63,11 @@ class RegistroProducto extends Model
     public function Almacen(){
         return $this->belongsTo(Almacen::class,'idAlmacen','idAlmacen');
     }
+    public function scopeConObservaciones($query)
+    {
+        return $query->whereNotNull('observacion');
+    }
+
 
     /**
      * Obtener las relaciones del modelo.
