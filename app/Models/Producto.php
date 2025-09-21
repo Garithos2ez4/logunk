@@ -35,7 +35,9 @@ class Producto extends Model
                             'imagenProducto4',
                             'estadoProductoWeb',
                             'stockMin',
-                            'slugProducto'
+                            'slugProducto',
+                            'url_local',
+                            'url_youtube'
                             ];
 
     

@@ -82,7 +82,7 @@ class PdfService implements PdfServiceInterface
             ->with(['Inventario' => function ($q) use ($idAlmacen) {
                 if ($idAlmacen) {
                     $q->where('idAlmacen', $idAlmacen);
-                }
+                }                   
             }])
             ->orderBy('codigoProducto')
             ->get();

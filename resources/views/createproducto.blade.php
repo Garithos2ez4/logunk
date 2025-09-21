@@ -182,6 +182,15 @@
                         </option>
                     @endforeach
                 </select>
+                       </div>
+              <div class="col-6 col-md-4 col-lg-2">
+                <label for="url_local" class="form-label">URL Local:</label>
+                <input name="url_local" value="{{old('url_local')}}" type="text" class="form-control" >
+            </div>
+              <div class="col-6 col-md-4 col-lg-2">
+                <label for="url_youtube" class="form-label">URL Youtube:</label>
+                <input name="url_youtube" value="{{old('url_youtube')}}" type="text" class="form-control" >
+          
             </div>
         </div>
         <div class="row border shadow rounded-3 pt-3 pb-3 mb-3 mt-3">

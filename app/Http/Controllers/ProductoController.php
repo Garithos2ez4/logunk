@@ -295,7 +295,8 @@ class ProductoController extends Controller
                                 $arrayProduct['descripcionProducto'] = $descripcion;
                                 $arrayProduct['estadoProductoWeb'] = $estado;
                                 $arrayProduct['stockMin'] = $stockminimo;
-                                
+                                $arrayProduct['url_local'] = $request->input('url_local');
+                                $arrayProduct['url_youtube'] = $request->input('url_youtube');
                                 $arrayProveedor['stock'] = $stockproveedor;
                                 $arrayProveedor['idProveedor'] = $proveedor;
                                 
@@ -345,6 +346,8 @@ class ProductoController extends Controller
                 $descripcion = $request->input('descripcion');
                 $tipoprecio = $request->input('tipoprecio');
                 $stockminimo = $request->input('stockminimo');
+                $url_local = $request->input('url_local');
+                $url_youtube = $request->input('url_youtube');
                 try{
                     if(!is_null($titulo)){
                         $arrayProduct['nombreProducto'] = $titulo;
@@ -400,7 +403,14 @@ class ProductoController extends Controller
                     if (!is_null($stockminimo)) {
                         $arrayProduct['stockMin'] = $stockminimo;
                     }
-                    
+                    if (!is_null($url_local)) {
+                        $arrayProduct['url_local'] = $url_local;
+                    }
+
+                    if (!is_null($url_youtube)) {
+                        $arrayProduct['url_youtube'] = $url_youtube;
+                    }
+
                     $this->productoService->updateProduct(decrypt($idProducto),$arrayProduct,$request->file('imgone'),$request->file('imgtwo'),$request->file('imgtree'),$request->file('imgfour'));
                     
                     if (!is_null($stock)){
